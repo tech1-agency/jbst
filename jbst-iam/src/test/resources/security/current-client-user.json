@@ -4,6 +4,7 @@
   "name" : "JBST",
   "zoneId" : "Europe/Kyiv",
   "passwordChangeRequired" : false,
+  "emailConfirmationRequired" : false,
   "authorities" : [ "admin", "user" ],
   "attributes" : {
     "key1" : "value1",

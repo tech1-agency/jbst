@@ -6,6 +6,8 @@ public interface SecurityJwtPublisher {
     void publishAuthenticationLogin(EventAuthenticationLogin event);
     void publishAuthenticationLoginFailure(EventAuthenticationLoginFailure event);
     void publishAuthenticationLogout(EventAuthenticationLogout event);
+    void publishRegistration0(EventRegistration0 event);
+    void publishRegistration0Failure(EventRegistration0Failure event);
     void publishRegistration1(EventRegistration1 event);
     void publishRegistration1Failure(EventRegistration1Failure event);
     void publishSessionRefreshed(EventSessionRefreshed event);

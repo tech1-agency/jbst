@@ -67,16 +67,45 @@ public class PostgresDbUser extends PostgresDbAbstractPersistable0 {
     @Column(name = "password_change_required", nullable = false)
     private boolean passwordChangeRequired;
 
+    @Column(name = "email_confirmation_required", nullable = false)
+    private boolean emailConfirmationRequired;
+
     @Convert(converter = PostgresMapStringsObjectsConverter.class)
     @Column(length = 65535)
     private Map<String, Object> attributes;
 
-    public PostgresDbUser(Username username, Password password, ZoneId zoneId, Set<SimpleGrantedAuthority> authorities, boolean passwordChangeRequired) {
+    public PostgresDbUser(
+            Username username,
+            Password password,
+            ZoneId zoneId,
+            Set<SimpleGrantedAuthority> authorities,
+            boolean passwordChangeRequired
+    ) {
         this.username = username;
         this.password = password;
         this.zoneId = zoneId;
         this.authorities = authorities;
         this.passwordChangeRequired = passwordChangeRequired;
+        this.emailConfirmationRequired = false;
+        this.attributes = new HashMap<>();
+    }
+
+    public PostgresDbUser(
+            Username username,
+            Password password,
+            ZoneId zoneId,
+            Email email,
+            Set<SimpleGrantedAuthority> authorities,
+            boolean passwordChangeRequired
+    ) {
+        this.username = username;
+        this.password = password;
+        this.zoneId = zoneId;
+        this.email = email;
+        this.authorities = authorities;
+        this.passwordChangeRequired = passwordChangeRequired;
+        this.emailConfirmationRequired = true;
+        this.attributes = new HashMap<>();
     }
 
     public PostgresDbUser(JwtUser user) {
@@ -157,6 +186,7 @@ public class PostgresDbUser extends PostgresDbAbstractPersistable0 {
                 this.email,
                 this.name,
                 this.passwordChangeRequired,
+                this.emailConfirmationRequired,
                 this.attributes
         );
     }

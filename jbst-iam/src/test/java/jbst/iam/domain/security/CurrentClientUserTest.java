@@ -68,6 +68,7 @@ class CurrentClientUserTest extends AbstractFolderSerializationRunner {
                 "JBST",
                 UKRAINE,
                 false,
+                false,
                 Set.of(
                         new SimpleGrantedAuthority("user"),
                         new SimpleGrantedAuthority("admin")
@@ -94,6 +95,7 @@ class CurrentClientUserTest extends AbstractFolderSerializationRunner {
                 Email.random(),
                 randomString(),
                 randomZoneId(),
+                false,
                 false,
                 Set.of(),
                 Map.of(
@@ -123,6 +125,7 @@ class CurrentClientUserTest extends AbstractFolderSerializationRunner {
                 randomString(),
                 randomZoneId(),
                 false,
+                false,
                 Set.of(
                         new SimpleGrantedAuthority("user1"),
                         new SimpleGrantedAuthority("user2"),
@@ -147,6 +150,7 @@ class CurrentClientUserTest extends AbstractFolderSerializationRunner {
                 Email.random(),
                 randomString(),
                 randomZoneId(),
+                false,
                 false,
                 Set.of(
                         new SimpleGrantedAuthority("user1"),

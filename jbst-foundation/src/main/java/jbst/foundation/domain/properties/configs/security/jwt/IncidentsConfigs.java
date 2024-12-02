@@ -29,16 +29,18 @@ public class IncidentsConfigs extends AbstractPropertyConfigs {
     public static IncidentsConfigs hardcoded() {
         return new IncidentsConfigs(
                 new EnumMap<>(
-                        Map.of(
-                                AUTHENTICATION_LOGIN, true,
-                                AUTHENTICATION_LOGIN_FAILURE_USERNAME_PASSWORD, false,
-                                AUTHENTICATION_LOGIN_FAILURE_USERNAME_MASKED_PASSWORD, true,
-                                AUTHENTICATION_LOGOUT, false,
-                                AUTHENTICATION_LOGOUT_MIN, false,
-                                SESSION_REFRESHED, true,
-                                SESSION_EXPIRED, false,
-                                REGISTER1, true,
-                                REGISTER1_FAILURE, true
+                        Map.ofEntries(
+                                Map.entry(AUTHENTICATION_LOGIN, true),
+                                Map.entry(AUTHENTICATION_LOGIN_FAILURE_USERNAME_PASSWORD, false),
+                                Map.entry(AUTHENTICATION_LOGIN_FAILURE_USERNAME_MASKED_PASSWORD, true),
+                                Map.entry(AUTHENTICATION_LOGOUT, false),
+                                Map.entry(AUTHENTICATION_LOGOUT_MIN, false),
+                                Map.entry(SESSION_REFRESHED, true),
+                                Map.entry(SESSION_EXPIRED, false),
+                                Map.entry(REGISTER0, true),
+                                Map.entry(REGISTER0_FAILURE, true),
+                                Map.entry(REGISTER1, true),
+                                Map.entry(REGISTER1_FAILURE, true)
                         )
                 )
         );

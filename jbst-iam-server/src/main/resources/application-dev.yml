@@ -43,6 +43,8 @@ jbst:
         AUTHENTICATION_LOGOUT_MIN: false
         SESSION_REFRESHED: true
         SESSION_EXPIRED: false
+        REGISTER0: true
+        REGISTER0_FAILURE: true
         REGISTER1: true
         REGISTER1_FAILURE: true
     jwt-tokens-configs:

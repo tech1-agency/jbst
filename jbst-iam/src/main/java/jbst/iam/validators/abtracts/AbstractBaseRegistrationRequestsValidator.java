@@ -1,6 +1,11 @@
 package jbst.iam.validators.abtracts;
 
+import jbst.foundation.domain.exceptions.authentication.RegistrationException;
+import jbst.foundation.incidents.domain.registration.IncidentRegistration0Failure;
+import jbst.foundation.incidents.domain.registration.IncidentRegistration1Failure;
+import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.dto.requests.RequestUserRegistration1;
+import jbst.iam.domain.events.EventRegistration0Failure;
 import jbst.iam.domain.events.EventRegistration1Failure;
 import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
 import jbst.iam.events.publishers.SecurityJwtPublisher;
@@ -9,8 +14,6 @@ import jbst.iam.repositories.UsersRepository;
 import jbst.iam.validators.BaseRegistrationRequestsValidator;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import jbst.foundation.domain.exceptions.authentication.RegistrationException;
-import jbst.foundation.incidents.domain.registration.IncidentRegistration1Failure;
 
 import static java.util.Objects.nonNull;
 import static jbst.foundation.utilities.exceptions.ExceptionsMessagesUtility.entityAlreadyUsed;
@@ -24,12 +27,56 @@ public abstract class AbstractBaseRegistrationRequestsValidator implements BaseR
     protected final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
     // Repositories
     protected final InvitationsRepository invitationsRepository;
-    protected final UsersRepository mongoUsersRepository;
+    protected final UsersRepository usersRepository;
+
+    @Override
+    public void validateRegistrationRequest0(RequestUserRegistration0 request) throws RegistrationException {
+        request.assertPasswordsOrThrow();
+        // TODO create method to check existence by only one sql request or replace findBy with existBy
+        var user = this.usersRepository.findByUsernameAsJwtUserOrNull(request.username());
+        if (nonNull(user)) {
+            var message = entityAlreadyUsed("Username", request.username().value());
+            this.securityJwtPublisher.publishRegistration0Failure(
+                    new EventRegistration0Failure(
+                            request.email(),
+                            request.username(),
+                            message
+                    )
+            );
+            this.securityJwtIncidentPublisher.publishRegistration0Failure(
+                    new IncidentRegistration0Failure(
+                            request.email(),
+                            request.username(),
+                            message
+                    )
+            );
+            throw new RegistrationException(message);
+        }
+        user = this.usersRepository.findByEmailAsJwtUserOrNull(request.email());
+        if (nonNull(user)) {
+            var message = entityAlreadyUsed("Email", request.email().value());
+            this.securityJwtPublisher.publishRegistration0Failure(
+                    new EventRegistration0Failure(
+                            request.email(),
+                            request.username(),
+                            message
+                    )
+            );
+            this.securityJwtIncidentPublisher.publishRegistration0Failure(
+                    new IncidentRegistration0Failure(
+                            request.email(),
+                            request.username(),
+                            message
+                    )
+            );
+            throw new RegistrationException(message);
+        }
+    }
 
     @Override
     public void validateRegistrationRequest1(RequestUserRegistration1 request) throws RegistrationException {
         request.assertPasswordsOrThrow();
-        var user = this.mongoUsersRepository.findByUsernameAsJwtUserOrNull(request.username());
+        var user = this.usersRepository.findByUsernameAsJwtUserOrNull(request.username());
         if (nonNull(user)) {
             var message = entityAlreadyUsed("Username", request.username().value());
             this.securityJwtPublisher.publishRegistration1Failure(

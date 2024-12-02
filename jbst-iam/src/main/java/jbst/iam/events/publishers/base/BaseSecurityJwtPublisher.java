@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import static jbst.foundation.domain.constants.JbstConstants.Logs.*;
+import static jbst.foundation.domain.constants.JbstConstants.Logs.USER_ACTION;
 
 @SuppressWarnings("LoggingSimilarMessage")
 @Slf4j
@@ -35,6 +35,18 @@ public class BaseSecurityJwtPublisher extends AbstractEventPublisher implements 
     @Override
     public void publishAuthenticationLogout(EventAuthenticationLogout event) {
         LOGGER.debug(USER_ACTION, event.username(), "[pub, events] logout");
+        this.applicationEventPublisher.publishEvent(event);
+    }
+
+    @Override
+    public void publishRegistration0(EventRegistration0 event) {
+        LOGGER.debug(USER_ACTION, event.requestUserRegistration0().username(), "[pub, events] register0");
+        this.applicationEventPublisher.publishEvent(event);
+    }
+
+    @Override
+    public void publishRegistration0Failure(EventRegistration0Failure event) {
+        LOGGER.debug(USER_ACTION, event.username(), "[pub, events] register0 failure");
         this.applicationEventPublisher.publishEvent(event);
     }
 

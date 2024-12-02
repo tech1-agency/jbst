@@ -12,6 +12,8 @@ public enum SecurityJwtIncidentType {
     AUTHENTICATION_LOGOUT_MIN("Authentication Logout Min"),
     SESSION_REFRESHED("Session Refreshed"),
     SESSION_EXPIRED("Session Expired"),
+    REGISTER0("Register0"),
+    REGISTER0_FAILURE("Register0 Failure"),
     REGISTER1("Register1"),
     REGISTER1_FAILURE("Register1 Failure");
 

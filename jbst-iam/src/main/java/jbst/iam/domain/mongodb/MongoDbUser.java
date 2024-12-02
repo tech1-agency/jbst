@@ -47,14 +47,40 @@ public class MongoDbUser {
     private Email email;
     private String name;
     private boolean passwordChangeRequired;
+    private boolean emailConfirmationRequired;
     private Map<String, Object> attributes;
 
-    public MongoDbUser(Username username, Password password, ZoneId zoneId, Set<SimpleGrantedAuthority> authorities,  boolean passwordChangeRequired) {
+    public MongoDbUser(
+            Username username,
+            Password password,
+            ZoneId zoneId,
+            Set<SimpleGrantedAuthority> authorities,
+            boolean passwordChangeRequired
+    ) {
         this.username = username;
         this.password = password;
         this.zoneId = zoneId;
         this.authorities = authorities;
         this.passwordChangeRequired = passwordChangeRequired;
+        this.emailConfirmationRequired = false;
+        this.attributes = new HashMap<>();
+    }
+
+    public MongoDbUser(
+            Username username,
+            Password password,
+            ZoneId zoneId,
+            Email email,
+            Set<SimpleGrantedAuthority> authorities,
+            boolean passwordChangeRequired
+    ) {
+        this.username = username;
+        this.password = password;
+        this.zoneId = zoneId;
+        this.email = email;
+        this.authorities = authorities;
+        this.passwordChangeRequired = passwordChangeRequired;
+        this.emailConfirmationRequired = true;
         this.attributes = new HashMap<>();
     }
 
@@ -136,6 +162,7 @@ public class MongoDbUser {
                 this.email,
                 this.name,
                 this.passwordChangeRequired,
+                this.emailConfirmationRequired,
                 this.attributes
         );
     }

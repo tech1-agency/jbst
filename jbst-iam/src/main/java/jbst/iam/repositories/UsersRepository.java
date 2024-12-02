@@ -1,6 +1,7 @@
 package jbst.iam.repositories;
 
 import jbst.iam.domain.db.Invitation;
+import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.dto.requests.RequestUserRegistration1;
 import jbst.iam.domain.identifiers.UserId;
 import jbst.iam.domain.jwt.JwtUser;
@@ -17,5 +18,6 @@ public interface UsersRepository {
     JwtUser findByEmailAsJwtUserOrNull(Email email);
     long count();
     UserId saveAs(JwtUser user);
+    UserId saveAs(RequestUserRegistration0 requestUserRegistration0, Password password);
     UserId saveAs(RequestUserRegistration1 requestUserRegistration1, Password password, Invitation invitation);
 }

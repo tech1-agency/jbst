@@ -3,6 +3,8 @@ package jbst.iam.events.publishers.impl;
 import jbst.foundation.domain.properties.JbstProperties;
 import jbst.foundation.domain.pubsub.AbstractEventPublisher;
 import jbst.foundation.incidents.domain.authetication.*;
+import jbst.foundation.incidents.domain.registration.IncidentRegistration0;
+import jbst.foundation.incidents.domain.registration.IncidentRegistration0Failure;
 import jbst.foundation.incidents.domain.registration.IncidentRegistration1;
 import jbst.foundation.incidents.domain.registration.IncidentRegistration1Failure;
 import jbst.foundation.incidents.domain.session.IncidentSessionExpired;
@@ -64,6 +66,22 @@ public class SecurityJwtIncidentPublisherImpl extends AbstractEventPublisher imp
     public void publishAuthenticationLogoutFull(IncidentAuthenticationLogoutFull incident) {
         if (this.jbstProperties.getSecurityJwtConfigs().getIncidentsConfigs().isEnabled(AUTHENTICATION_LOGOUT)) {
             LOGGER.debug(USER_ACTION, incident.username(), "[pub, incidents] logout");
+            this.applicationEventPublisher.publishEvent(incident);
+        }
+    }
+
+    @Override
+    public void publishRegistration0(IncidentRegistration0 incident) {
+        if (this.jbstProperties.getSecurityJwtConfigs().getIncidentsConfigs().isEnabled(REGISTER0)) {
+            LOGGER.debug(USER_ACTION, incident.username(), "[pub, incidents] register0");
+            this.applicationEventPublisher.publishEvent(incident);
+        }
+    }
+
+    @Override
+    public void publishRegistration0Failure(IncidentRegistration0Failure incident) {
+        if (this.jbstProperties.getSecurityJwtConfigs().getIncidentsConfigs().isEnabled(REGISTER0_FAILURE)) {
+            LOGGER.debug(USER_ACTION, incident.username(), "[pub, incidents] register0 failure");
             this.applicationEventPublisher.publishEvent(incident);
         }
     }

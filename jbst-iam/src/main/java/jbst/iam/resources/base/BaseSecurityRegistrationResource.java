@@ -2,8 +2,11 @@ package jbst.iam.resources.base;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jbst.foundation.incidents.domain.registration.IncidentRegistration0;
 import jbst.iam.annotations.AbstractJbstBaseSecurityResource;
+import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.dto.requests.RequestUserRegistration1;
+import jbst.iam.domain.events.EventRegistration0;
 import jbst.iam.domain.events.EventRegistration1;
 import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
 import jbst.iam.events.publishers.SecurityJwtPublisher;
@@ -34,6 +37,15 @@ public class BaseSecurityRegistrationResource {
     private final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
     // Validators
     private final BaseRegistrationRequestsValidator baseRegistrationRequestsValidator;
+
+    @PostMapping("/register0")
+    @ResponseStatus(HttpStatus.OK)
+    public void register0(@RequestBody @Valid RequestUserRegistration0 request) throws RegistrationException {
+        this.baseRegistrationRequestsValidator.validateRegistrationRequest0(request);
+        this.baseRegistrationService.register0(request);
+        this.securityJwtPublisher.publishRegistration0(new EventRegistration0(request));
+        this.securityJwtIncidentPublisher.publishRegistration0(new IncidentRegistration0(request.username()));
+    }
 
     @PostMapping("/register1")
     @ResponseStatus(HttpStatus.OK)

@@ -26,6 +26,7 @@ public record JwtUser(
         Email email,
         String name,
         boolean passwordChangeRequired,
+        boolean emailConfirmationRequired,
         Map<String, Object> attributes
 ) implements UserDetails {
 
@@ -80,6 +81,7 @@ public record JwtUser(
                 Email.hardcoded(),
                 "",
                 false,
+                false,
                 new HashMap<>()
         );
     }
@@ -102,6 +104,7 @@ public record JwtUser(
                 Email.random(),
                 randomString(),
                 randomBoolean(),
+                randomBoolean(),
                 new HashMap<>(
                         Map.of(
                             randomString(), randomString(),
@@ -120,6 +123,7 @@ public record JwtUser(
                 getSimpleGrantedAuthorities(SUPERADMIN),
                 Email.random(),
                 randomString(),
+                false,
                 false,
                 new HashMap<>()
         );

@@ -10,6 +10,7 @@ CREATE TABLE "jbst_users" (
     "email" varchar(255),
     "name" varchar(255),
     "password_change_required" bool NOT NULL,
+    "email_confirmation_required" bool NOT NULL,
     "attributes" varchar(65535)
 );
 

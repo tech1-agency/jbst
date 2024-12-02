@@ -1,6 +1,7 @@
 package jbst.iam.services.abstracts;
 
 import jbst.iam.domain.db.Invitation;
+import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.dto.requests.RequestUserRegistration1;
 import jbst.iam.repositories.InvitationsRepository;
 import jbst.iam.repositories.UsersRepository;
@@ -18,6 +19,12 @@ public abstract class AbstractBaseRegistrationService implements BaseRegistratio
     private final UsersRepository usersRepository;
     // Password
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    public void register0(RequestUserRegistration0 requestUserRegistration0) {
+        var hashPassword = this.bCryptPasswordEncoder.encode(requestUserRegistration0.password().value());
+        this.usersRepository.saveAs(requestUserRegistration0, Password.of(hashPassword));
+    }
 
     @Override
     public void register1(RequestUserRegistration1 requestUserRegistration1) {
