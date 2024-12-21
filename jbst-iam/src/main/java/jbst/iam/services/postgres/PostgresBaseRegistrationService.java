@@ -1,5 +1,6 @@
 package jbst.iam.services.postgres;
 
+import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.dto.requests.RequestUserRegistration1;
 import jbst.iam.repositories.postgres.PostgresInvitationsRepository;
 import jbst.iam.repositories.postgres.PostgresUsersRepository;
@@ -25,6 +26,12 @@ public class PostgresBaseRegistrationService extends AbstractBaseRegistrationSer
                 usersRepository,
                 bCryptPasswordEncoder
         );
+    }
+
+    @Transactional
+    @Override
+    public void register0(RequestUserRegistration0 requestUserRegistration0) {
+        super.register0(requestUserRegistration0);
     }
 
     @Transactional

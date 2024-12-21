@@ -1,6 +1,7 @@
 package jbst.iam.events.subscribers.base;
 
 import jbst.foundation.domain.base.UsernamePasswordCredentials;
+import jbst.foundation.domain.http.requests.UserRequestMetadata;
 import jbst.foundation.domain.pubsub.AbstractEventSubscriber;
 import jbst.foundation.incidents.domain.authetication.IncidentAuthenticationLogin;
 import jbst.foundation.incidents.domain.authetication.IncidentAuthenticationLoginFailureUsernameMaskedPassword;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static java.util.Objects.isNull;
 import static jbst.foundation.domain.constants.JbstConstants.Logs.USER_ACTION;
 
 @SuppressWarnings("LoggingSimilarMessage")
@@ -45,29 +47,33 @@ public class BaseSecurityJwtSubscriber extends AbstractEventSubscriber implement
 
     @Override
     public void onAuthenticationLoginFailure(EventAuthenticationLoginFailure event) {
-        LOGGER.debug(USER_ACTION, event.username(), "[sub, events] login failure");
-        var userRequestMetadata = this.userMetadataUtils.getUserRequestMetadataProcessed(
-                event.ipAddress(),
-                event.userAgentHeader()
-        );
-        this.securityJwtIncidentPublisher.publishAuthenticationLoginFailureUsernamePassword(
-                new IncidentAuthenticationLoginFailureUsernamePassword(
-                        new UsernamePasswordCredentials(
-                                event.username(),
-                                event.password()
-                        ),
-                        userRequestMetadata
-                )
-        );
-        this.securityJwtIncidentPublisher.publishAuthenticationLoginFailureUsernameMaskedPassword(
-                new IncidentAuthenticationLoginFailureUsernameMaskedPassword(
-                        UsernamePasswordCredentials.mask5(
-                                event.username(),
-                                event.password()
-                        ),
-                        userRequestMetadata
-                )
-        );
+        try {
+            LOGGER.debug(USER_ACTION, event.username(), "[sub, events] login failure");
+            var userRequestMetadata = this.userMetadataUtils.getUserRequestMetadataProcessed(
+                    event.ipAddress(),
+                    event.userAgentHeader()
+            );
+            this.securityJwtIncidentPublisher.publishAuthenticationLoginFailureUsernamePassword(
+                    new IncidentAuthenticationLoginFailureUsernamePassword(
+                            new UsernamePasswordCredentials(
+                                    event.username(),
+                                    event.password()
+                            ),
+                            userRequestMetadata
+                    )
+            );
+            this.securityJwtIncidentPublisher.publishAuthenticationLoginFailureUsernameMaskedPassword(
+                    new IncidentAuthenticationLoginFailureUsernameMaskedPassword(
+                            UsernamePasswordCredentials.mask5(
+                                    event.username(),
+                                    event.password()
+                            ),
+                            userRequestMetadata
+                    )
+            );
+        } catch (RuntimeException ex) {
+            this.incidentPublisher.publishThrowable(ex);
+        }
     }
 
     @Override
@@ -114,9 +120,37 @@ public class BaseSecurityJwtSubscriber extends AbstractEventSubscriber implement
 
     @Override
     public void onSessionUserRequestMetadataAdd(EventSessionUserRequestMetadataAdd event) {
-        LOGGER.debug(USER_ACTION, event.username(), "[sub, events] session user request metadata add");
-        var session = this.baseUsersSessionsService.saveUserRequestMetadata(event);
-        var metadata = session.metadata();
+        try {
+            LOGGER.debug(USER_ACTION, event.username(), "[sub, events] session user request metadata add");
+            var session = this.baseUsersSessionsService.saveUserRequestMetadata(event);
+            var metadata = session.metadata();
+            this.processSessionUserRequestMetadataAddEmails(event, metadata);
+            this.processSessionUserRequestMetadataAddIncidents(event, metadata);
+        } catch (RuntimeException ex) {
+            this.incidentPublisher.publishThrowable(ex);
+        }
+    }
+
+    @Override
+    public void onSessionUserRequestMetadataRenew(EventSessionUserRequestMetadataRenew event) {
+        try {
+            LOGGER.debug(USER_ACTION, event.username(), "[sub, events] session user request metadata renew, sessionId: " + event.session().id());
+            this.baseUsersSessionsService.saveUserRequestMetadata(event);
+        } catch (RuntimeException ex) {
+            this.incidentPublisher.publishThrowable(ex);
+        }
+    }
+
+    // =================================================================================================================
+    // PRIVATE METHODS
+    // =================================================================================================================
+    private void processSessionUserRequestMetadataAddEmails(
+            EventSessionUserRequestMetadataAdd event,
+            UserRequestMetadata metadata
+    ) {
+        if (isNull(event.email())) {
+            return;
+        }
         if (event.isAuthenticationLoginEndpoint()) {
             this.usersEmailsService.executeAuthenticationLogin(
                     new FunctionAccountAccessed(
@@ -124,12 +158,6 @@ public class BaseSecurityJwtSubscriber extends AbstractEventSubscriber implement
                             event.email(),
                             metadata,
                             AccountAccessMethod.USERNAME_PASSWORD
-                    )
-            );
-            this.securityJwtIncidentPublisher.publishAuthenticationLogin(
-                    new IncidentAuthenticationLogin(
-                            event.username(),
-                            metadata
                     )
             );
         }
@@ -142,6 +170,22 @@ public class BaseSecurityJwtSubscriber extends AbstractEventSubscriber implement
                             AccountAccessMethod.SECURITY_TOKEN
                     )
             );
+        }
+    }
+
+    private void processSessionUserRequestMetadataAddIncidents(
+            EventSessionUserRequestMetadataAdd event,
+            UserRequestMetadata metadata
+    ) {
+        if (event.isAuthenticationLoginEndpoint()) {
+            this.securityJwtIncidentPublisher.publishAuthenticationLogin(
+                    new IncidentAuthenticationLogin(
+                            event.username(),
+                            metadata
+                    )
+            );
+        }
+        if (event.isAuthenticationRefreshTokenEndpoint()) {
             this.securityJwtIncidentPublisher.publishSessionRefreshed(
                     new IncidentSessionRefreshed(
                             event.username(),
@@ -149,11 +193,5 @@ public class BaseSecurityJwtSubscriber extends AbstractEventSubscriber implement
                     )
             );
         }
-    }
-
-    @Override
-    public void onSessionUserRequestMetadataRenew(EventSessionUserRequestMetadataRenew event) {
-        LOGGER.debug(USER_ACTION, event.username(), "[sub, events] session user request metadata renew, sessionId: " + event.session().id());
-        this.baseUsersSessionsService.saveUserRequestMetadata(event);
     }
 }

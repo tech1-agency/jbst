@@ -51,10 +51,99 @@ import static org.mockito.Mockito.*;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class BaseSecurityJwtSubscriberTest {
 
-    private static Stream<Arguments> onRegistration0Test() {
+    private static Stream<Arguments> exceptionalExecutionParams() {
         return Stream.of(
                 Arguments.of(new IllegalArgumentException()),
                 Arguments.of((Object) null)
+        );
+    }
+
+    private static Stream<Arguments> eventSessionUserRequestMetadataAddLoginTest() {
+        return Stream.of(
+                Arguments.of(
+                        new EventSessionUserRequestMetadataAdd(
+                                Username.random(),
+                                Email.random(),
+                                entity(UserSession.class),
+                                IPAddress.random(),
+                                mock(UserAgentHeader.class),
+                                true,
+                                false
+                        ),
+                        null
+                ),
+                Arguments.of(
+                        new EventSessionUserRequestMetadataAdd(
+                                Username.random(),
+                                null,
+                                entity(UserSession.class),
+                                IPAddress.random(),
+                                mock(UserAgentHeader.class),
+                                true,
+                                false
+                        ),
+                        null
+                ),
+                Arguments.of(
+                        new EventSessionUserRequestMetadataAdd(
+                                Username.random(),
+                                null,
+                                entity(UserSession.class),
+                                IPAddress.random(),
+                                mock(UserAgentHeader.class),
+                                true,
+                                false
+                        ),
+                        new RuntimeException("Unexpected error occurred")
+                )
+        );
+    }
+
+    private static Stream<Arguments> eventSessionUserRequestMetadataAddRefreshTest() {
+        return Stream.of(
+                Arguments.of(
+                        new EventSessionUserRequestMetadataAdd(
+                                Username.random(),
+                                Email.random(),
+                                entity(UserSession.class),
+                                IPAddress.random(),
+                                mock(UserAgentHeader.class),
+                                false,
+                                true
+                        ),
+                        null
+                ),
+                Arguments.of(
+                        new EventSessionUserRequestMetadataAdd(
+                                Username.random(),
+                                null,
+                                entity(UserSession.class),
+                                IPAddress.random(),
+                                mock(UserAgentHeader.class),
+                                false,
+                                true
+                        ),
+                        null
+                ),
+                Arguments.of(
+                        new EventSessionUserRequestMetadataAdd(
+                                Username.random(),
+                                null,
+                                entity(UserSession.class),
+                                IPAddress.random(),
+                                mock(UserAgentHeader.class),
+                                false,
+                                true
+                        ),
+                        new RuntimeException("Unexpected error occurred")
+                )
+        );
+    }
+
+    public static Stream<Arguments> onSessionUserRequestMetadataRenewTest() {
+        return Stream.of(
+                Arguments.of((RuntimeException) null),
+                Arguments.of(new RuntimeException("Unexpected error occurred"))
         );
     }
 
@@ -152,11 +241,15 @@ class BaseSecurityJwtSubscriberTest {
         assertThat(event).isNotNull();
     }
 
-    @Test
-    void onAuthenticationLoginFailureTest() {
+    @ParameterizedTest
+    @MethodSource("exceptionalExecutionParams")
+    void onAuthenticationLoginFailureTest(RuntimeException ex) {
         // Arrange
         var event = EventAuthenticationLoginFailure.hardcoded();
         when(this.userMetadataUtils.getUserRequestMetadataProcessed(event.ipAddress(), event.userAgentHeader())).thenReturn(UserRequestMetadata.valid());
+        if (nonNull(ex)) {
+            doThrow(ex).when(this.securityJwtIncidentPublisher).publishAuthenticationLoginFailureUsernameMaskedPassword(any());
+        }
 
         // Act
         this.componentUnderTest.onAuthenticationLoginFailure(event);
@@ -181,6 +274,7 @@ class BaseSecurityJwtSubscriberTest {
                         UserRequestMetadata.valid()
                 )
         );
+        verify(this.incidentPublisher, nonNull(ex) ? times(1) : times(0)).publishThrowable(ex);
     }
 
     @Test
@@ -196,7 +290,7 @@ class BaseSecurityJwtSubscriberTest {
     }
 
     @ParameterizedTest
-    @MethodSource("onRegistration0Test")
+    @MethodSource("exceptionalExecutionParams")
     void onRegistration0Test(RuntimeException ex) {
         // Arrange
         var requestUserRegistration0 = RequestUserRegistration0.hardcoded();
@@ -299,61 +393,72 @@ class BaseSecurityJwtSubscriberTest {
         verify(this.baseUsersSessionsService).saveUserRequestMetadata(event);
     }
 
-    @Test
-    void onSessionUserRequestMetadataAddIsAuthenticationLoginEndpointTest() {
+    @ParameterizedTest
+    @MethodSource("eventSessionUserRequestMetadataAddLoginTest")
+    void onSessionUserRequestMetadataAddIsAuthenticationLoginEndpointTest(
+            EventSessionUserRequestMetadataAdd event,
+            RuntimeException ex
+    ) {
         // Arrange
-        var event = new EventSessionUserRequestMetadataAdd(
-                Username.random(),
-                Email.random(),
-                entity(UserSession.class),
-                IPAddress.random(),
-                mock(UserAgentHeader.class),
-                true,
-                false
-        );
         when(this.baseUsersSessionsService.saveUserRequestMetadata(event)).thenReturn(event.session());
+        if (nonNull(ex)) {
+            doThrow(ex).when(this.securityJwtIncidentPublisher).publishAuthenticationLogin(any());
+        }
 
         // Act
         this.componentUnderTest.onSessionUserRequestMetadataAdd(event);
 
         // Assert
         verify(this.baseUsersSessionsService).saveUserRequestMetadata(event);
-        verify(this.usersEmailsService).executeAuthenticationLogin(new FunctionAccountAccessed(event.username(), event.email(), event.session().metadata(), USERNAME_PASSWORD));
+        if (nonNull(event.email())) {
+            verify(this.usersEmailsService).executeAuthenticationLogin(new FunctionAccountAccessed(event.username(), event.email(), event.session().metadata(), USERNAME_PASSWORD));
+        } else {
+            verifyNoInteractions(this.usersEmailsService);
+        }
         verify(this.securityJwtIncidentPublisher).publishAuthenticationLogin(new IncidentAuthenticationLogin(event.username(), event.session().metadata()));
+        verify(this.incidentPublisher, nonNull(ex) ? times(1) : times(0)).publishThrowable(ex);
     }
 
-    @Test
-    void onSessionUserRequestMetadataAddIsAuthenticationRefreshTokenEndpointTest() {
+    @ParameterizedTest
+    @MethodSource("eventSessionUserRequestMetadataAddRefreshTest")
+    void onSessionUserRequestMetadataAddIsAuthenticationRefreshTokenEndpointTest(
+            EventSessionUserRequestMetadataAdd event,
+            RuntimeException ex
+    ) {
         // Arrange
-        var event = new EventSessionUserRequestMetadataAdd(
-                Username.random(),
-                Email.random(),
-                entity(UserSession.class),
-                IPAddress.random(),
-                mock(UserAgentHeader.class),
-                false,
-                true
-        );
         when(this.baseUsersSessionsService.saveUserRequestMetadata(event)).thenReturn(event.session());
+        if (nonNull(ex)) {
+            doThrow(ex).when(this.securityJwtIncidentPublisher).publishSessionRefreshed(any());
+        }
 
         // Act
         this.componentUnderTest.onSessionUserRequestMetadataAdd(event);
 
         // Assert
         verify(this.baseUsersSessionsService).saveUserRequestMetadata(event);
-        verify(this.usersEmailsService).executeSessionRefreshed(new FunctionAccountAccessed(event.username(), event.email(), event.session().metadata(), SECURITY_TOKEN));
+        if (nonNull(event.email())) {
+            verify(this.usersEmailsService).executeSessionRefreshed(new FunctionAccountAccessed(event.username(), event.email(), event.session().metadata(), SECURITY_TOKEN));
+        } else {
+            verifyNoInteractions(this.usersEmailsService);
+        }
         verify(this.securityJwtIncidentPublisher).publishSessionRefreshed(new IncidentSessionRefreshed(event.username(), event.session().metadata()));
+        verify(this.incidentPublisher, nonNull(ex) ? times(1) : times(0)).publishThrowable(ex);
     }
 
-    @Test
-    void onSessionUserRequestMetadataRenewTest() {
+    @ParameterizedTest
+    @MethodSource("onSessionUserRequestMetadataRenewTest")
+    void onSessionUserRequestMetadataRenewTest(RuntimeException ex) {
         // Arrange
         var event = entity(EventSessionUserRequestMetadataRenew.class);
+        if (nonNull(ex)) {
+            doThrow(ex).when(this.baseUsersSessionsService).saveUserRequestMetadata(event);
+        }
 
         // Act
         this.componentUnderTest.onSessionUserRequestMetadataRenew(event);
 
         // Assert
         verify(this.baseUsersSessionsService).saveUserRequestMetadata(event);
+        verify(this.incidentPublisher, nonNull(ex) ? times(1) : times(0)).publishThrowable(ex);
     }
 }
