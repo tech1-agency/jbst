@@ -1,3 +1,2 @@
-### Changelog [v1.7]
-— Modification: "account access + absent user mail" scenario fix
-— Modification: GeoLocationsConfigs geoLiteCityDatabaseEnabled -> enabled
+### Changelog [v1.8]
+— TBD
