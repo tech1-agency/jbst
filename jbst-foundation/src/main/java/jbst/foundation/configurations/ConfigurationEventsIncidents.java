@@ -33,6 +33,7 @@ public class ConfigurationEventsIncidents {
         this.jbstProperties.getEventsConfigs().assertProperties(new PropertyId("eventsConfigs"));
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Bean(name = "applicationEventMulticaster")
     public ApplicationEventMulticaster simpleApplicationEventMulticaster() {
         var eventsConfigs = this.jbstProperties.getEventsConfigs();

@@ -3,4 +3,4 @@
 # jbst
 jbst:
   server-configs:
-    name: server-on-mongodb
+    name: jbst-mongodb

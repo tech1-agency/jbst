@@ -18,7 +18,7 @@ jbst:
     webclient-url: http://localhost:3000
   utilities-configs:
     geo-locations-configs:
-      geo-lite-city-database-enabled: false
+      enabled: false
     geo-country-flags-configs:
       enabled: false
     user-agent-configs:

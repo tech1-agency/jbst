@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO [YYL] colors/print
+
 METHOD=maven
 PORT=3002
 SPRING_BOOT_PROFILE=mongodb

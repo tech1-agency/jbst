@@ -37,7 +37,7 @@ public class MindMaxGeoLocationUtilityImpl implements MindMaxGeoLocationUtility 
     ) {
         this.geoCountryFlagUtility = geoCountryFlagUtility;
         this.jbstProperties = jbstProperties;
-        var enabled = jbstProperties.getUtilitiesConfigs().getGeoLocationsConfigs().isGeoLiteCityDatabaseEnabled();
+        var enabled = jbstProperties.getUtilitiesConfigs().getGeoLocationsConfigs().isEnabled();
         LOGGER.info(CONFIGURATION_LOG, Status.of(enabled).formatAnsi());
         if (enabled) {
             try {
@@ -57,7 +57,7 @@ public class MindMaxGeoLocationUtilityImpl implements MindMaxGeoLocationUtility 
 
     @Override
     public GeoLocation getGeoLocation(IPAddress ipAddress) {
-        if (!this.jbstProperties.getUtilitiesConfigs().getGeoLocationsConfigs().isGeoLiteCityDatabaseEnabled()) {
+        if (!this.jbstProperties.getUtilitiesConfigs().getGeoLocationsConfigs().isEnabled()) {
             return GeoLocation.unknown(ipAddress, contactDevelopmentTeam("Geo configurations failure"));
         }
         try {

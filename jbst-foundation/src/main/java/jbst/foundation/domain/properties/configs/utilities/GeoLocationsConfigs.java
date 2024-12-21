@@ -1,7 +1,7 @@
 package jbst.foundation.domain.properties.configs.utilities;
 
 import jbst.foundation.domain.properties.annotations.MandatoryProperty;
-import jbst.foundation.domain.properties.base.AbstractPropertyConfigs;
+import jbst.foundation.domain.properties.base.AbstractTogglePropertyConfigs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,10 +12,9 @@ import static jbst.foundation.utilities.random.RandomUtility.randomBoolean;
 @AllArgsConstructor(onConstructor = @__({@ConstructorBinding}))
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GeoLocationsConfigs extends AbstractPropertyConfigs {
-    // TODO [YYL] geoLiteCityDatabaseEnabled -> enabled, AbstractPropertyConfigs -> AbstractTogglePropertyConfigs
+public class GeoLocationsConfigs extends AbstractTogglePropertyConfigs {
     @MandatoryProperty
-    private final Boolean geoLiteCityDatabaseEnabled;
+    private final boolean enabled;
 
     public static GeoLocationsConfigs hardcoded() {
         return new GeoLocationsConfigs(true);
@@ -31,9 +30,5 @@ public class GeoLocationsConfigs extends AbstractPropertyConfigs {
 
     public static GeoLocationsConfigs disabled() {
         return new GeoLocationsConfigs(false);
-    }
-
-    public boolean isGeoLiteCityDatabaseEnabled() {
-        return this.geoLiteCityDatabaseEnabled;
     }
 }
