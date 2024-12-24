@@ -1,7 +1,5 @@
 package jbst.iam.server.configurations;
 
-import jakarta.annotation.PostConstruct;
-import jbst.foundation.domain.base.PropertyId;
 import jbst.foundation.domain.properties.JbstProperties;
 import jbst.iam.configurations.AbstractJbstSecurityJwtConfigurer;
 import jbst.iam.configurations.ConfigurationBaseSecurityJwt;
@@ -22,13 +20,12 @@ import static org.springframework.http.HttpMethod.GET;
         // -------------------------------------------------------------------------------------------------------------
         "jbst.iam.assistants.current.base",
         "jbst.iam.filters.jwt_extension",
-        "jbst.iam.tasks.superadmin",
-        // -------------------------------------------------------------------------------------------------------------
-        "jbst.iam.server.base"
+        "jbst.iam.tasks.superadmin"
         // -------------------------------------------------------------------------------------------------------------
 })
 @Import({
-        ConfigurationBaseSecurityJwt.class
+        ConfigurationBaseSecurityJwt.class,
+        ConfigurationServerBase.class
 })
 @EnableConfigurationProperties({
         ServerProperties.class
@@ -38,12 +35,6 @@ public class ConfigurationServer implements AbstractJbstSecurityJwtConfigurer {
 
     // Properties
     private final JbstProperties jbstProperties;
-    private final ServerProperties serverProperties;
-
-    @PostConstruct
-    public void init() {
-        this.serverProperties.getServerConfigs().assertProperties(new PropertyId("serverConfigs"));
-    }
 
     @Override
     public void configure(WebSecurity web) {
