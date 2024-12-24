@@ -15,25 +15,25 @@ import static jbst.foundation.utilities.random.RandomUtility.randomString;
 @AllArgsConstructor(onConstructor = @__({@ConstructorBinding}))
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class WebsocketsFeatureHardwareConfigs extends AbstractTogglePropertyConfigs {
+public class WebsocketsFeatureConfigs extends AbstractTogglePropertyConfigs {
     @MandatoryProperty
     private final boolean enabled;
     @MandatoryToggleProperty
     private String userDestination;
 
-    public static WebsocketsFeatureHardwareConfigs hardcoded() {
-        return new WebsocketsFeatureHardwareConfigs(true, "/accounts");
+    public static WebsocketsFeatureConfigs hardcoded() {
+        return new WebsocketsFeatureConfigs(true, "/accounts");
     }
 
-    public static WebsocketsFeatureHardwareConfigs random() {
-        return new WebsocketsFeatureHardwareConfigs(randomBoolean(), randomString());
+    public static WebsocketsFeatureConfigs random() {
+        return new WebsocketsFeatureConfigs(randomBoolean(), randomString());
     }
 
-    public static WebsocketsFeatureHardwareConfigs enabled() {
+    public static WebsocketsFeatureConfigs enabled() {
         return hardcoded();
     }
 
-    public static WebsocketsFeatureHardwareConfigs disabled() {
-        return new WebsocketsFeatureHardwareConfigs(false, null);
+    public static WebsocketsFeatureConfigs disabled() {
+        return new WebsocketsFeatureConfigs(false, null);
     }
 }

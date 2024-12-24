@@ -45,6 +45,8 @@ public class SecurityJwtConfigs extends AbstractPropertiesConfigs {
     private final SessionConfigs sessionConfigs;
     @MandatoryProperty
     private final UsersEmailsConfigs usersEmailsConfigs;
+    @MandatoryProperty
+    private final WebsocketsConfigs websocketsConfigs;
     @NonMandatoryProperty
     private final UsersTokensConfigs usersTokensConfigs;
 
@@ -58,6 +60,7 @@ public class SecurityJwtConfigs extends AbstractPropertiesConfigs {
                 LoggingConfigs.hardcoded(),
                 SessionConfigs.hardcoded(),
                 UsersEmailsConfigs.hardcoded(),
+                WebsocketsConfigs.hardcoded(),
                 UsersTokensConfigs.hardcoded()
         );
     }
@@ -70,6 +73,7 @@ public class SecurityJwtConfigs extends AbstractPropertiesConfigs {
                 null,
                 null,
                 loggingConfigs,
+                null,
                 null,
                 null,
                 null
@@ -85,6 +89,7 @@ public class SecurityJwtConfigs extends AbstractPropertiesConfigs {
                 null,
                 null,
                 sessionConfigs,
+                null,
                 null,
                 null
         );
@@ -104,6 +109,7 @@ public class SecurityJwtConfigs extends AbstractPropertiesConfigs {
                         Checkbox.disabled(),
                         Checkbox.disabled()
                 ),
+                null,
                 null
         );
     }

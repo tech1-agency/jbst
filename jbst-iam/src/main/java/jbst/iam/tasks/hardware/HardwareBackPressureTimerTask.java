@@ -1,13 +1,13 @@
 package jbst.iam.tasks.hardware;
 
-import jbst.iam.sessions.SessionRegistry;
-import jbst.iam.template.WssMessagingTemplate;
-import org.springframework.stereotype.Component;
 import jbst.foundation.domain.concurrent.AbstractInfiniteTimerTask;
 import jbst.foundation.domain.properties.JbstProperties;
 import jbst.foundation.domain.time.SchedulerConfiguration;
 import jbst.foundation.incidents.events.publishers.IncidentPublisher;
 import jbst.foundation.services.hardware.store.HardwareMonitoringStore;
+import jbst.iam.sessions.SessionRegistry;
+import jbst.iam.template.WssMessagingTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,10 +38,7 @@ public class HardwareBackPressureTimerTask extends AbstractInfiniteTimerTask {
         this.wssMessagingTemplate = wssMessagingTemplate;
         this.hardwareMonitoringStore = hardwareMonitoringStore;
         this.incidentPublisher = incidentPublisher;
-
-        var hardwareConfigs = jbstProperties.getSecurityJwtWebsocketsConfigs().getFeaturesConfigs().getHardwareConfigs();
-        boolean hardwareConfigsEnabled = hardwareConfigs.isEnabled();
-        if (hardwareConfigsEnabled) {
+        if (jbstProperties.getSecurityJwtConfigs().getWebsocketsConfigs().getFeaturesConfigs().getHardwareConfigs().isEnabled()) {
             this.start();
         }
     }

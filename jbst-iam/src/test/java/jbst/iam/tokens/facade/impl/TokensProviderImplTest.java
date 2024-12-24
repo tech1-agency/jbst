@@ -288,6 +288,7 @@ class TokensProviderImplTest {
                         LoggingConfigs.hardcoded(),
                         SessionConfigs.hardcoded(),
                         UsersEmailsConfigs.hardcoded(),
+                        WebsocketsConfigs.hardcoded(),
                         UsersTokensConfigs.hardcoded()
                 )
         );

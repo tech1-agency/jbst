@@ -75,34 +75,33 @@ jbst:
         amount: 5
     jwt-tokens-configs:
       access-token:
-        cookie-key: ajwt
+        cookie-key: "ajwt"
       refreshToken:
-        cookie-key: rjwt
+        cookie-key: "rjwt"
+    websockets-configs:
+      enabled: true
+      csrf-configs:
+        header-name: "t-csrf-header"
+        parameter-name: "_csrf"
+        token-key: "t-csrf-token"
+      stomp-configs:
+        endpoint: "/jbst-server-websockets"
+      broker-configs:
+        application-destination-prefix: "/app"
+        simple-destination: "/queue"
+        user-destination-prefix: "/user"
+      features-configs:
+        hardware-configs:
+          enabled: true
+          user-destination: "/accounts"
+        reset-server-configs:
+          enabled: true
+          user-destination: "/accounts"
     users-emails-configs:
       authentication-login:
         enabled: true
       session-refreshed:
         enabled: true
-  security-jwt-websockets-configs:
-    csrf-configs:
-      header-name: "t-csrf-header"
-      parameter-name: "_csrf"
-      token-key: "t-csrf-token"
-    stomp-configs:
-      endpoint: "/jbst-server-websockets"
-    broker-configs:
-      application-destination-prefix: "/app"
-      simple-destination: "/queue"
-      user-destination-prefix: "/user"
-    template-configs:
-      enabled: true
-    features-configs:
-      hardware-configs:
-        enabled: true
-        user-destination: "/accounts"
-      reset-server-configs:
-        enabled: true
-        user-destination: "/accounts"
 
 # jbst server
 jbst-server:

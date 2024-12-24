@@ -116,6 +116,7 @@ class DefaultStartupEventListenerTest {
                 null,
                 null,
                 null,
+                null,
                 null
         );
         when(this.jbstProperties.getServerConfigs()).thenReturn(ServerConfigs.hardcoded());

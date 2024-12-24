@@ -247,6 +247,7 @@ class PropertiesAsserterAndPrinterTest {
                 SecurityJwtConfigs.hardcoded().getLoggingConfigs(),
                 SecurityJwtConfigs.hardcoded().getSessionConfigs(),
                 SecurityJwtConfigs.hardcoded().getUsersEmailsConfigs(),
+                SecurityJwtConfigs.hardcoded().getWebsocketsConfigs(),
                 SecurityJwtConfigs.hardcoded().getUsersTokensConfigs()
         );
 
@@ -283,6 +284,7 @@ class PropertiesAsserterAndPrinterTest {
                 SecurityJwtConfigs.hardcoded().getLoggingConfigs(),
                 SecurityJwtConfigs.hardcoded().getSessionConfigs(),
                 SecurityJwtConfigs.hardcoded().getUsersEmailsConfigs(),
+                SecurityJwtConfigs.hardcoded().getWebsocketsConfigs(),
                 SecurityJwtConfigs.hardcoded().getUsersTokensConfigs()
         );
 
@@ -321,6 +323,7 @@ class PropertiesAsserterAndPrinterTest {
                 SecurityJwtConfigs.hardcoded().getLoggingConfigs(),
                 SecurityJwtConfigs.hardcoded().getSessionConfigs(),
                 SecurityJwtConfigs.hardcoded().getUsersEmailsConfigs(),
+                SecurityJwtConfigs.hardcoded().getWebsocketsConfigs(),
                 SecurityJwtConfigs.hardcoded().getUsersTokensConfigs()
         );
 
@@ -331,16 +334,6 @@ class PropertiesAsserterAndPrinterTest {
         assertThat(throwable).isNotNull();
         assertThat(throwable.getClass()).isEqualTo(IllegalArgumentException.class);
         assertThat(throwable.getMessage()).isEqualTo("Please configure login failure incident feature. Only one feature type could be enabled");
-    }
-
-    @Test
-    void securityJwtWebsocketsConfigsTest() {
-        // Act
-        SecurityJwtWebsocketsConfigs.hardcoded().assertProperties(new PropertyId("securityJwtWebsocketsConfigs"));
-        SecurityJwtWebsocketsConfigs.hardcoded().printProperties(new PropertyId("securityJwtWebsocketsConfigs"));
-
-        // Assert
-        // no asserts
     }
 
     @Test

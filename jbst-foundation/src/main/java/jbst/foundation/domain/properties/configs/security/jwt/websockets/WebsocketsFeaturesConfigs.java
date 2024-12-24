@@ -13,21 +13,21 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 @EqualsAndHashCode(callSuper = true)
 public class WebsocketsFeaturesConfigs extends AbstractPropertiesConfigs {
     @NonMandatoryProperty
-    private WebsocketsFeatureHardwareConfigs hardwareConfigs;
+    private WebsocketsFeatureConfigs hardwareConfigs;
     @NonMandatoryProperty
-    private WebsocketsFeatureHardwareConfigs resetServerConfigs;
+    private WebsocketsFeatureConfigs resetServerConfigs;
 
     public static WebsocketsFeaturesConfigs hardcoded() {
         return new WebsocketsFeaturesConfigs(
-                WebsocketsFeatureHardwareConfigs.hardcoded(),
-                WebsocketsFeatureHardwareConfigs.hardcoded()
+                WebsocketsFeatureConfigs.hardcoded(),
+                WebsocketsFeatureConfigs.hardcoded()
         );
     }
 
     public static WebsocketsFeaturesConfigs random() {
         return new WebsocketsFeaturesConfigs(
-                WebsocketsFeatureHardwareConfigs.random(),
-                WebsocketsFeatureHardwareConfigs.random()
+                WebsocketsFeatureConfigs.random(),
+                WebsocketsFeatureConfigs.random()
         );
     }
 

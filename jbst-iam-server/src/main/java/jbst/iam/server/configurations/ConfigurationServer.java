@@ -1,8 +1,10 @@
 package jbst.iam.server.configurations;
 
 import jakarta.annotation.PostConstruct;
+import jbst.foundation.domain.base.PropertyId;
+import jbst.foundation.domain.properties.JbstProperties;
 import jbst.iam.configurations.AbstractJbstSecurityJwtConfigurer;
-import jbst.iam.configurations.ConfigurationBaseSecurityJwtWebsockets;
+import jbst.iam.configurations.ConfigurationBaseSecurityJwt;
 import jbst.iam.server.base.properties.ServerProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import jbst.foundation.domain.base.PropertyId;
-import jbst.foundation.domain.properties.JbstProperties;
 
 import static org.springframework.http.HttpMethod.GET;
 
@@ -28,7 +28,7 @@ import static org.springframework.http.HttpMethod.GET;
         // -------------------------------------------------------------------------------------------------------------
 })
 @Import({
-        ConfigurationBaseSecurityJwtWebsockets.class
+        ConfigurationBaseSecurityJwt.class
 })
 @EnableConfigurationProperties({
         ServerProperties.class
@@ -47,7 +47,7 @@ public class ConfigurationServer implements AbstractJbstSecurityJwtConfigurer {
 
     @Override
     public void configure(WebSecurity web) {
-        var endpoint = this.jbstProperties.getSecurityJwtWebsocketsConfigs().getStompConfigs().getEndpoint();
+        var endpoint = this.jbstProperties.getSecurityJwtConfigs().getWebsocketsConfigs().getStompConfigs().getEndpoint();
         web.ignoring().requestMatchers(endpoint + "/**");
     }
 

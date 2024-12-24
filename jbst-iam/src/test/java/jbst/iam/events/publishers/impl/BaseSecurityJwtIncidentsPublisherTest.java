@@ -403,6 +403,7 @@ class BaseSecurityJwtIncidentsPublisherTest {
                 null,
                 null,
                 null,
+                null,
                 null
         );
     }

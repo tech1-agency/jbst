@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith({ SpringExtension.class })
 @ContextConfiguration(loader= AnnotationConfigContextLoader.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class ConfigurationBaseSecurityJwtMvcTest {
+class ConfigurationBaseSecurityJwtWebMVCTest {
 
     @Configuration
     @Import(

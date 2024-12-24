@@ -27,7 +27,6 @@ public class JbstProperties implements PriorityOrdered {
     private HardwareMonitoringConfigs hardwareMonitoringConfigs;
     private HardwareServerConfigs hardwareServerConfigs;
     private SecurityJwtConfigs securityJwtConfigs;
-    private SecurityJwtWebsocketsConfigs securityJwtWebsocketsConfigs;
     private MongodbSecurityJwtConfigs mongodbSecurityJwtConfigs;
 
     public static JbstProperties hardcoded() {
@@ -43,7 +42,6 @@ public class JbstProperties implements PriorityOrdered {
         properties.setHardwareMonitoringConfigs(HardwareMonitoringConfigs.hardcoded());
         properties.setHardwareServerConfigs(HardwareServerConfigs.hardcoded());
         properties.setSecurityJwtConfigs(SecurityJwtConfigs.hardcoded());
-        properties.setSecurityJwtWebsocketsConfigs(SecurityJwtWebsocketsConfigs.hardcoded());
         properties.setMongodbSecurityJwtConfigs(MongodbSecurityJwtConfigs.hardcoded());
         return properties;
     }

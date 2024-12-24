@@ -2,8 +2,12 @@ package jbst.iam.configurations;
 
 import jbst.foundation.domain.properties.JbstProperties;
 import jbst.foundation.domain.properties.configs.MvcConfigs;
-import jbst.foundation.domain.properties.configs.SecurityJwtWebsocketsConfigs;
+import jbst.foundation.domain.properties.configs.SecurityJwtConfigs;
 import jbst.foundation.domain.properties.configs.mvc.CorsConfigs;
+import jbst.iam.assistants.userdetails.JwtUserDetailsService;
+import jbst.iam.filters.jwt.JwtTokensFilter;
+import jbst.iam.handlers.exceptions.JwtAccessDeniedExceptionHandler;
+import jbst.iam.handlers.exceptions.JwtAuthenticationEntryPointExceptionHandler;
 import jbst.iam.handshakes.CsrfInterceptorHandshake;
 import jbst.iam.handshakes.SecurityHandshakeHandler;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -30,7 +35,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith({ SpringExtension.class })
 @ContextConfiguration(loader= AnnotationConfigContextLoader.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class ConfigurationBaseSecurityJwtWebsocketsTest {
+class ConfigurationBaseSecurityJwtTest {
 
     @Configuration
     @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -53,7 +58,7 @@ class ConfigurationBaseSecurityJwtWebsocketsTest {
                             )
                     )
             );
-            properties.setSecurityJwtWebsocketsConfigs(SecurityJwtWebsocketsConfigs.hardcoded());
+            properties.setSecurityJwtConfigs(SecurityJwtConfigs.hardcoded());
             return properties;
         }
 
@@ -68,10 +73,16 @@ class ConfigurationBaseSecurityJwtWebsocketsTest {
         }
 
         @Bean
-        ConfigurationBaseSecurityJwtWebsockets applicationBaseSecurityJwtWebsockets() {
-            return new ConfigurationBaseSecurityJwtWebsockets(
+        ConfigurationBaseSecurityJwt applicationBaseSecurityJwtWebsockets() {
+            return new ConfigurationBaseSecurityJwt(
+                    mock(JwtUserDetailsService.class),
+                    mock(BCryptPasswordEncoder.class),
+                    mock(JwtTokensFilter.class),
+                    mock(JwtAuthenticationEntryPointExceptionHandler.class),
+                    mock(JwtAccessDeniedExceptionHandler.class),
                     this.csrfInterceptorHandshake(),
                     this.securityHandshakeHandler(),
+                    mock(AbstractJbstSecurityJwtConfigurer.class),
                     this.jbstProperties()
             );
         }
@@ -87,7 +98,7 @@ class ConfigurationBaseSecurityJwtWebsocketsTest {
     private final CsrfInterceptorHandshake csrfInterceptorHandshake;
     private final SecurityHandshakeHandler securityHandshakeHandler;
 
-    private final ConfigurationBaseSecurityJwtWebsockets componentUnderTest;
+    private final ConfigurationBaseSecurityJwt componentUnderTest;
 
     @Test
     void beansTests() {
