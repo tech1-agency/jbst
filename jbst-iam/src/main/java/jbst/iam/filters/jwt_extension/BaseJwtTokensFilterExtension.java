@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class DefaultJwtTokensFilterExtension implements JwtTokensFilterExtension {
+public class BaseJwtTokensFilterExtension implements JwtTokensFilterExtension {
 
     @Override
     public void doFilter(@NotNull HttpServletRequest request) {
