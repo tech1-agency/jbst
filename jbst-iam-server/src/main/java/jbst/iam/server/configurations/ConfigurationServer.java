@@ -1,6 +1,5 @@
 package jbst.iam.server.configurations;
 
-import jbst.foundation.domain.properties.JbstProperties;
 import jbst.iam.configurations.AbstractJbstSecurityJwtConfigurer;
 import jbst.iam.configurations.ConfigurationBaseSecurityJwt;
 import jbst.iam.configurations.ConfigurationBaseSecurityJwtFallbackBases;
@@ -12,8 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-
-import static org.springframework.http.HttpMethod.GET;
 
 @Configuration
 @Import({
@@ -27,24 +24,13 @@ import static org.springframework.http.HttpMethod.GET;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ConfigurationServer implements AbstractJbstSecurityJwtConfigurer {
 
-    // Properties
-    private final JbstProperties jbstProperties;
-
     @Override
     public void configure(WebSecurity web) {
-        var endpoint = this.jbstProperties.getSecurityJwtConfigs().getWebsocketsConfigs().getStompConfigs().getEndpoint();
-        web.ignoring().requestMatchers(endpoint + "/**");
+        // no configurations
     }
 
     @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/**"))
-                .authorizeHttpRequests(authorizeHttpRequests ->
-                        authorizeHttpRequests
-                                .requestMatchers(GET, "/system/csrf").authenticated()
-                                .requestMatchers("/hardware/**").permitAll()
-                );
+    public void configure(HttpSecurity http) {
+        // no configurations
     }
-
 }

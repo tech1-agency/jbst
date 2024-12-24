@@ -131,6 +131,12 @@ public class ConfigurationBaseSecurityJwt extends AbstractSecurityWebSocketMessa
             if (this.jbstProperties.getServerConfigs().isSpringdocEnabled()) {
                 web.ignoring().requestMatchers(JbstConstants.Swagger.ENDPOINTS.toArray(new String[0]));
             }
+            // WARNING: You are asking Spring Security to ignore Ant [pattern='/**/**'].
+            // This is not recommended: please use permitAll via HttpSecurity#authorizeHttpRequests instead
+            if (this.jbstProperties.getSecurityJwtConfigs().getWebsocketsConfigs().isEnabled()) {
+                var endpoint = this.jbstProperties.getSecurityJwtConfigs().getWebsocketsConfigs().getStompConfigs().getEndpoint();
+                web.ignoring().requestMatchers(endpoint + "/**");
+            }
             this.abstractJbstSecurityJwtConfigurer.configure(web);
         };
     }
@@ -160,38 +166,41 @@ public class ConfigurationBaseSecurityJwt extends AbstractSecurityWebSocketMessa
         // WARNING: order is important, configurer must have possibility to override matchers below
         this.abstractJbstSecurityJwtConfigurer.configure(http);
 
-        http.authorizeHttpRequests(authorizeHttpRequests -> {
-            authorizeHttpRequests
-                    .requestMatchers(POST, basePathPrefix + "/authentication/login").permitAll()
-                    .requestMatchers(POST, basePathPrefix + "/authentication/logout").permitAll()
-                    .requestMatchers(POST, basePathPrefix + "/authentication/refreshToken").permitAll()
-                    .requestMatchers(GET, basePathPrefix + "/session/current").authenticated()
-                    .requestMatchers(POST, basePathPrefix + "/registration/register0").anonymous()
-                    .requestMatchers(POST, basePathPrefix + "/registration/register1").anonymous()
-                    .requestMatchers(POST, basePathPrefix + "/user/update1").authenticated()
-                    .requestMatchers(POST, basePathPrefix + "/user/update2").authenticated()
-                    .requestMatchers(POST, basePathPrefix + "/user/changePassword1").authenticated()
-                    .requestMatchers(GET, basePathPrefix + "/tokens/email/confirm").permitAll()
-                    .requestMatchers(basePathPrefix + "/tokens/password/reset").anonymous();
+        http
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/**"))
+                .authorizeHttpRequests(authorizeHttpRequests -> {
+                    authorizeHttpRequests
+                            .requestMatchers(POST, basePathPrefix + "/authentication/login").permitAll()
+                            .requestMatchers(POST, basePathPrefix + "/authentication/logout").permitAll()
+                            .requestMatchers(POST, basePathPrefix + "/authentication/refreshToken").permitAll()
+                            .requestMatchers(GET, basePathPrefix + "/session/current").authenticated()
+                            .requestMatchers(POST, basePathPrefix + "/registration/register0").anonymous()
+                            .requestMatchers(POST, basePathPrefix + "/registration/register1").anonymous()
+                            .requestMatchers(POST, basePathPrefix + "/user/update1").authenticated()
+                            .requestMatchers(POST, basePathPrefix + "/user/update2").authenticated()
+                            .requestMatchers(POST, basePathPrefix + "/user/changePassword1").authenticated()
+                            .requestMatchers(GET, basePathPrefix + "/tokens/email/confirm").permitAll()
+                            .requestMatchers(basePathPrefix + "/tokens/password/reset").anonymous();
 
-            if (this.jbstProperties.getSecurityJwtConfigs().getEssenceConfigs().getInvitations().isEnabled()) {
-                authorizeHttpRequests
-                        .requestMatchers(GET, basePathPrefix + "/invitations").hasAuthority(INVITATIONS_READ)
-                        .requestMatchers(POST, basePathPrefix + "/invitations").hasAuthority(INVITATIONS_WRITE)
-                        .requestMatchers(DELETE, basePathPrefix + "/invitations/{invitationId}").hasAuthority(INVITATIONS_WRITE);
-            } else {
-                authorizeHttpRequests.requestMatchers(basePathPrefix + "/invitations/**").denyAll();
-            }
+                    if (this.jbstProperties.getSecurityJwtConfigs().getEssenceConfigs().getInvitations().isEnabled()) {
+                        authorizeHttpRequests
+                                .requestMatchers(GET, basePathPrefix + "/invitations").hasAuthority(INVITATIONS_READ)
+                                .requestMatchers(POST, basePathPrefix + "/invitations").hasAuthority(INVITATIONS_WRITE)
+                                .requestMatchers(DELETE, basePathPrefix + "/invitations/{invitationId}").hasAuthority(INVITATIONS_WRITE);
+                    } else {
+                        authorizeHttpRequests.requestMatchers(basePathPrefix + "/invitations/**").denyAll();
+                    }
 
-            authorizeHttpRequests
-                    .requestMatchers(basePathPrefix + "/test-data/**").authenticated()
-                    .requestMatchers(basePathPrefix + "/hardware/**").authenticated()
-                    .requestMatchers(basePathPrefix + "/superadmin/**").hasAuthority(SUPERADMIN)
-                    .requestMatchers(basePathPrefix + "/**").authenticated();
+                    authorizeHttpRequests
+                            .requestMatchers(GET, "/system/csrf").authenticated()
+                            .requestMatchers(basePathPrefix + "/test-data/**").authenticated()
+                            .requestMatchers(basePathPrefix + "/hardware/**").permitAll()
+                            .requestMatchers(basePathPrefix + "/superadmin/**").hasAuthority(SUPERADMIN)
+                            .requestMatchers(basePathPrefix + "/**").authenticated();
 
-            authorizeHttpRequests.requestMatchers("/actuator/**").permitAll();
+                    authorizeHttpRequests.requestMatchers("/actuator/**").permitAll();
 
-            authorizeHttpRequests.anyRequest().authenticated();
+                    authorizeHttpRequests.anyRequest().authenticated();
         });
 
         return http.build();
