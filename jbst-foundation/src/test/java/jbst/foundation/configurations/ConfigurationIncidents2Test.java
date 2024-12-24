@@ -21,6 +21,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE,
         properties = {
+                "jbst.async-configs.thread-name-prefix=tps1-async",
+                "jbst.async-configs.threads-core-pool-percentage=25",
+                "jbst.async-configs.threads-max-pool-percentage=50",
+                "jbst.events-configs.thread-name-prefix=tps1-events",
+                "jbst.events-configs.threads-core-pool-percentage=75",
+                "jbst.events-configs.threads-max-pool-percentage=100",
                 "jbst.incident-configs.enabled=false"
         }
 )
@@ -46,13 +52,13 @@ class ConfigurationIncidents2Test {
 
         // Assert
         assertThat(methods)
-                .contains("asyncUncaughtExceptionHandler")
+                .contains("incidentPublisher")
+                .contains("rejectedExecutionHandler")
+                .contains("errorHandlerPublisher")
+                .contains("simpleApplicationEventMulticaster")
                 .contains("incidentClientDefinition")
                 .contains("incidentClient")
-                .contains("incidentPublisher")
                 .contains("incidentSubscriber")
-                .contains("errorHandler")
-                .contains("rejectedExecutionHandler")
                 .hasSizeGreaterThanOrEqualTo(24);
     }
 

@@ -31,12 +31,12 @@ jbst:
     version: @project.version@
   async-configs:
     thread-name-prefix: tps1-async
-    threadsCorePoolPercentage: 25
-    threadsMaxPoolPercentage: 50
+    threads-core-pool-percentage: 25
+    threads-max-pool-percentage: 50
   events-configs:
     thread-name-prefix: tps1-events
-    threadsCorePoolPercentage: 75
-    threadsMaxPoolPercentage: 100
+    threads-core-pool-percentage: 75
+    threads-max-pool-percentage: 100
   mvc-configs:
     enabled: true
     base-path-prefix: /jbst/security

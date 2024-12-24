@@ -1,2 +1,2 @@
 ### Changelog [v1.8]
-— TBD
+— Modification: jbst-spring configurations blocks/tree

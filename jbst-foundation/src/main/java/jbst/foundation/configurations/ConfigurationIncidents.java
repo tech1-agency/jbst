@@ -27,16 +27,27 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.ErrorHandler;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionHandler;
+
+import static jbst.foundation.utilities.processors.ProcessorsUtility.getNumOfCores;
 
 @Configuration
 @EnableConfigurationProperties({
         JbstProperties.class
 })
+@EnableAsync
+@EnableScheduling
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ConfigurationIncidents {
+public class ConfigurationIncidents implements AsyncConfigurer {
 
     // Spring Publisher
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -45,8 +56,81 @@ public class ConfigurationIncidents {
 
     @PostConstruct
     public void init() {
+        this.jbstProperties.getAsyncConfigs().assertProperties(new PropertyId("asyncConfigs"));
+        this.jbstProperties.getEventsConfigs().assertProperties(new PropertyId("eventsConfigs"));
         this.jbstProperties.getIncidentConfigs().assertProperties(new PropertyId("incidentConfigs"));
     }
+
+    // ================================================================================================================
+    // Incidents: Publisher
+    // ================================================================================================================
+
+    @Bean
+    IncidentPublisher incidentPublisher() {
+        return new IncidentPublisherImpl(
+                this.applicationEventPublisher
+        );
+    }
+
+    // ================================================================================================================
+    // Async
+    // ================================================================================================================
+
+    @Bean
+    RejectedExecutionHandler rejectedExecutionHandler() {
+        return new RejectedExecutionHandlerPublisher(
+                this.incidentPublisher()
+        );
+    }
+
+    @Override
+    public Executor getAsyncExecutor() {
+        var asyncConfigs = this.jbstProperties.getAsyncConfigs();
+        var taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setThreadNamePrefix(asyncConfigs.getThreadNamePrefix());
+        taskExecutor.setCorePoolSize(getNumOfCores(asyncConfigs.asThreadsCorePoolTuplePercentage()));
+        taskExecutor.setMaxPoolSize(getNumOfCores(asyncConfigs.asThreadsMaxPoolTuplePercentage()));
+        taskExecutor.setRejectedExecutionHandler(this.rejectedExecutionHandler());
+        taskExecutor.initialize();
+        return taskExecutor;
+    }
+
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return new AsyncUncaughtExceptionHandlerPublisher(
+                this.incidentPublisher()
+        );
+    }
+
+    // ================================================================================================================
+    // Events
+    // ================================================================================================================
+
+    @Bean
+    ErrorHandler errorHandlerPublisher() {
+        return new ErrorHandlerPublisher(
+                this.incidentPublisher()
+        );
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    @Bean(name = "applicationEventMulticaster")
+    public ApplicationEventMulticaster simpleApplicationEventMulticaster() {
+        var eventsConfigs = this.jbstProperties.getEventsConfigs();
+        var taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setThreadNamePrefix(eventsConfigs.getThreadNamePrefix());
+        taskExecutor.setCorePoolSize(getNumOfCores(eventsConfigs.asThreadsCorePoolTuplePercentage()));
+        taskExecutor.setMaxPoolSize(getNumOfCores(eventsConfigs.asThreadsMaxPoolTuplePercentage()));
+        taskExecutor.initialize();
+        var eventMulticaster = new SimpleApplicationEventMulticaster();
+        eventMulticaster.setTaskExecutor(taskExecutor);
+        eventMulticaster.setErrorHandler(this.errorHandlerPublisher());
+        return eventMulticaster;
+    }
+
+    // ================================================================================================================
+    // Incidents
+    // ================================================================================================================
 
     @Bean
     @ConditionalOnProperty(value = "jbst.incident-configs.enabled", havingValue = "true")
@@ -77,37 +161,9 @@ public class ConfigurationIncidents {
     }
 
     @Bean
-    IncidentPublisher incidentPublisher() {
-        return new IncidentPublisherImpl(
-                this.applicationEventPublisher
-        );
-    }
-
-    @Bean
     IncidentSubscriber incidentSubscriber(IncidentClient incidentClient) {
         return new IncidentSubscriberImpl(
                 incidentClient
-        );
-    }
-
-    @Bean
-    AsyncUncaughtExceptionHandler asyncUncaughtExceptionHandler() {
-        return new AsyncUncaughtExceptionHandlerPublisher(
-                this.incidentPublisher()
-        );
-    }
-
-    @Bean
-    ErrorHandler errorHandler() {
-        return new ErrorHandlerPublisher(
-                this.incidentPublisher()
-        );
-    }
-
-    @Bean
-    RejectedExecutionHandler rejectedExecutionHandler() {
-        return new RejectedExecutionHandlerPublisher(
-                this.incidentPublisher()
         );
     }
 }
