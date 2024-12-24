@@ -1,4 +1,4 @@
-package jbst.iam.events.publishers;
+package jbst.iam.events.publishers.incidents;
 
 import jbst.foundation.incidents.domain.authetication.*;
 import jbst.foundation.incidents.domain.registration.IncidentRegistration0;
@@ -8,7 +8,7 @@ import jbst.foundation.incidents.domain.registration.IncidentRegistration1Failur
 import jbst.foundation.incidents.domain.session.IncidentSessionExpired;
 import jbst.foundation.incidents.domain.session.IncidentSessionRefreshed;
 
-public interface SecurityJwtIncidentPublisher {
+public interface SecurityJwtIncidentsPublisher {
     void publishAuthenticationLogin(IncidentAuthenticationLogin incident);
     void publishAuthenticationLoginFailureUsernamePassword(IncidentAuthenticationLoginFailureUsernamePassword incident);
     void publishAuthenticationLoginFailureUsernameMaskedPassword(IncidentAuthenticationLoginFailureUsernameMaskedPassword incident);

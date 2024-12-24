@@ -1,6 +1,6 @@
 package jbst.iam.services.mongodb;
 
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.mongodb.MongoUsersSessionsRepository;
 import jbst.iam.services.abstracts.AbstractBaseUsersSessionsService;
 import jbst.iam.utils.SecurityJwtTokenUtils;
@@ -13,13 +13,13 @@ public class MongoBaseUsersSessionsService extends AbstractBaseUsersSessionsServ
 
     @Autowired
     public MongoBaseUsersSessionsService(
-            SecurityJwtPublisher securityJwtPublisher,
+            SecurityJwtEventsPublisher securityJwtEventsPublisher,
             MongoUsersSessionsRepository usersSessionsRepository,
             UserMetadataUtils userMetadataUtils,
             SecurityJwtTokenUtils securityJwtTokenUtils
     ) {
         super(
-                securityJwtPublisher,
+                securityJwtEventsPublisher,
                 usersSessionsRepository,
                 userMetadataUtils,
                 securityJwtTokenUtils

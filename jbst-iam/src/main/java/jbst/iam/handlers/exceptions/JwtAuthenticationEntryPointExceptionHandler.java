@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jbst.iam.domain.dto.requests.RequestUserLogin;
 import jbst.iam.domain.events.EventAuthenticationLoginFailure;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.utils.HttpRequestUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import static jbst.foundation.utilities.http.HttpServletRequestUtility.getClient
 public class JwtAuthenticationEntryPointExceptionHandler implements AuthenticationEntryPoint {
 
     // Publishers
-    private final SecurityJwtPublisher securityJwtPublisher;
+    private final SecurityJwtEventsPublisher securityJwtPublisher;
     // Utilities
     private final HttpRequestUtils httpRequestUtils;
     // JSONs

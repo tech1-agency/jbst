@@ -11,7 +11,8 @@ import jbst.foundation.incidents.domain.registration.IncidentRegistration1;
 import jbst.foundation.incidents.domain.registration.IncidentRegistration1Failure;
 import jbst.foundation.incidents.domain.session.IncidentSessionExpired;
 import jbst.foundation.incidents.domain.session.IncidentSessionRefreshed;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.incidents.impl.BaseSecurityJwtIncidentsPublisher;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith({ SpringExtension.class })
 @ContextConfiguration(loader= AnnotationConfigContextLoader.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class SecurityJwtIncidentPublisherImplTest {
+class BaseSecurityJwtIncidentsPublisherTest {
 
     @Configuration
     static class ContextConfiguration {
@@ -54,8 +55,8 @@ class SecurityJwtIncidentPublisherImplTest {
         }
 
         @Bean
-        SecurityJwtIncidentPublisher securityJwtIncidentPublisher() {
-            return new SecurityJwtIncidentPublisherImpl(
+        SecurityJwtIncidentsPublisher securityJwtIncidentPublisher() {
+            return new BaseSecurityJwtIncidentsPublisher(
                     this.applicationEventPublisher(),
                     this.jbstProperties()
             );
@@ -67,7 +68,7 @@ class SecurityJwtIncidentPublisherImplTest {
     // Properties
     private final JbstProperties jbstProperties;
 
-    private final SecurityJwtIncidentPublisher componentUnderTest;
+    private final SecurityJwtIncidentsPublisher componentUnderTest;
 
     @BeforeEach
     void beforeEach() {

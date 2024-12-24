@@ -17,7 +17,7 @@ import jbst.iam.domain.db.UserToken;
 import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.events.*;
 import jbst.iam.domain.functions.FunctionAccountAccessed;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
 import jbst.iam.events.subscribers.SecurityJwtSubscriber;
 import jbst.iam.services.BaseUsersSessionsService;
 import jbst.iam.services.BaseUsersTokensService;
@@ -150,8 +150,8 @@ class BaseSecurityJwtSubscriberTest {
     @Configuration
     static class ContextConfiguration {
         @Bean
-        SecurityJwtIncidentPublisher securityJwtIncidentPublisher() {
-            return mock(SecurityJwtIncidentPublisher.class);
+        SecurityJwtIncidentsPublisher securityJwtIncidentPublisher() {
+            return mock(SecurityJwtIncidentsPublisher.class);
         }
 
         @Bean
@@ -193,7 +193,7 @@ class BaseSecurityJwtSubscriberTest {
     }
 
     // Publishers
-    private final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
+    private final SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher;
     // Services
     private final BaseUsersTokensService baseUsersTokensService;
     private final UsersEmailsService usersEmailsService;
@@ -208,7 +208,7 @@ class BaseSecurityJwtSubscriberTest {
     @BeforeEach
     void beforeEach() {
         reset(
-                this.securityJwtIncidentPublisher,
+                this.securityJwtIncidentsPublisher,
                 this.baseUsersTokensService,
                 this.usersEmailsService,
                 this.baseUsersSessionsService,
@@ -220,7 +220,7 @@ class BaseSecurityJwtSubscriberTest {
     @AfterEach
     void afterEach() {
         verifyNoMoreInteractions(
-                this.securityJwtIncidentPublisher,
+                this.securityJwtIncidentsPublisher,
                 this.baseUsersTokensService,
                 this.usersEmailsService,
                 this.baseUsersSessionsService,
@@ -248,7 +248,7 @@ class BaseSecurityJwtSubscriberTest {
         var event = EventAuthenticationLoginFailure.hardcoded();
         when(this.userMetadataUtils.getUserRequestMetadataProcessed(event.ipAddress(), event.userAgentHeader())).thenReturn(UserRequestMetadata.valid());
         if (nonNull(ex)) {
-            doThrow(ex).when(this.securityJwtIncidentPublisher).publishAuthenticationLoginFailureUsernameMaskedPassword(any());
+            doThrow(ex).when(this.securityJwtIncidentsPublisher).publishAuthenticationLoginFailureUsernameMaskedPassword(any());
         }
 
         // Act
@@ -256,7 +256,7 @@ class BaseSecurityJwtSubscriberTest {
 
         // Assert
         verify(this.userMetadataUtils).getUserRequestMetadataProcessed(event.ipAddress(), event.userAgentHeader());
-        verify(this.securityJwtIncidentPublisher).publishAuthenticationLoginFailureUsernamePassword(
+        verify(this.securityJwtIncidentsPublisher).publishAuthenticationLoginFailureUsernamePassword(
                 new IncidentAuthenticationLoginFailureUsernamePassword(
                         new UsernamePasswordCredentials(
                                 event.username(),
@@ -265,7 +265,7 @@ class BaseSecurityJwtSubscriberTest {
                         UserRequestMetadata.valid()
                 )
         );
-        verify(this.securityJwtIncidentPublisher).publishAuthenticationLoginFailureUsernameMaskedPassword(
+        verify(this.securityJwtIncidentsPublisher).publishAuthenticationLoginFailureUsernameMaskedPassword(
                 new IncidentAuthenticationLoginFailureUsernameMaskedPassword(
                         UsernamePasswordCredentials.mask5(
                                 event.username(),
@@ -402,7 +402,7 @@ class BaseSecurityJwtSubscriberTest {
         // Arrange
         when(this.baseUsersSessionsService.saveUserRequestMetadata(event)).thenReturn(event.session());
         if (nonNull(ex)) {
-            doThrow(ex).when(this.securityJwtIncidentPublisher).publishAuthenticationLogin(any());
+            doThrow(ex).when(this.securityJwtIncidentsPublisher).publishAuthenticationLogin(any());
         }
 
         // Act
@@ -415,7 +415,7 @@ class BaseSecurityJwtSubscriberTest {
         } else {
             verifyNoInteractions(this.usersEmailsService);
         }
-        verify(this.securityJwtIncidentPublisher).publishAuthenticationLogin(new IncidentAuthenticationLogin(event.username(), event.session().metadata()));
+        verify(this.securityJwtIncidentsPublisher).publishAuthenticationLogin(new IncidentAuthenticationLogin(event.username(), event.session().metadata()));
         verify(this.incidentPublisher, nonNull(ex) ? times(1) : times(0)).publishThrowable(ex);
     }
 
@@ -428,7 +428,7 @@ class BaseSecurityJwtSubscriberTest {
         // Arrange
         when(this.baseUsersSessionsService.saveUserRequestMetadata(event)).thenReturn(event.session());
         if (nonNull(ex)) {
-            doThrow(ex).when(this.securityJwtIncidentPublisher).publishSessionRefreshed(any());
+            doThrow(ex).when(this.securityJwtIncidentsPublisher).publishSessionRefreshed(any());
         }
 
         // Act
@@ -441,7 +441,7 @@ class BaseSecurityJwtSubscriberTest {
         } else {
             verifyNoInteractions(this.usersEmailsService);
         }
-        verify(this.securityJwtIncidentPublisher).publishSessionRefreshed(new IncidentSessionRefreshed(event.username(), event.session().metadata()));
+        verify(this.securityJwtIncidentsPublisher).publishSessionRefreshed(new IncidentSessionRefreshed(event.username(), event.session().metadata()));
         verify(this.incidentPublisher, nonNull(ex) ? times(1) : times(0)).publishThrowable(ex);
     }
 

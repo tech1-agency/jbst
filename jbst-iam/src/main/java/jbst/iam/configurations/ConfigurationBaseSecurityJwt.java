@@ -34,8 +34,8 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 @ComponentScan({
         "jbst.iam.crons",
-        "jbst.iam.events.publishers.base",
-        "jbst.iam.events.publishers.impl",
+        "jbst.iam.events.publishers.events",
+        "jbst.iam.events.publishers.incidents",
         "jbst.iam.events.subscribers.base",
         "jbst.iam.events.subscribers.impl",
         "jbst.iam.handlers.exceptions",

@@ -1,7 +1,7 @@
 package jbst.iam.validators.mongodb;
 
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.mongodb.MongoInvitationsRepository;
 import jbst.iam.repositories.mongodb.MongoUsersRepository;
 import jbst.iam.validators.abtracts.AbstractBaseRegistrationRequestsValidator;
@@ -13,14 +13,14 @@ public class MongoBaseRegistrationRequestsValidator extends AbstractBaseRegistra
 
     @Autowired
     public MongoBaseRegistrationRequestsValidator(
-            SecurityJwtPublisher securityJwtPublisher,
-            SecurityJwtIncidentPublisher securityJwtIncidentPublisher,
+            SecurityJwtEventsPublisher securityJwtEventsPublisher,
+            SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher,
             MongoInvitationsRepository invitationsRepository,
             MongoUsersRepository usersRepository
     ) {
         super(
-                securityJwtPublisher,
-                securityJwtIncidentPublisher,
+                securityJwtEventsPublisher,
+                securityJwtIncidentsPublisher,
                 invitationsRepository,
                 usersRepository
         );

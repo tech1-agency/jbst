@@ -1,7 +1,7 @@
 package jbst.iam.configurations;
 
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.postgres.PostgresInvitationsRepository;
 import jbst.iam.repositories.postgres.PostgresUsersRepository;
 import jbst.iam.repositories.postgres.PostgresUsersSessionsRepository;
@@ -27,13 +27,13 @@ public class TestConfigurationPostgresValidators {
     // Publishers
     // =================================================================================================================
     @Bean
-    SecurityJwtPublisher securityJwtPublisher() {
-        return mock(SecurityJwtPublisher.class);
+    SecurityJwtEventsPublisher securityJwtPublisher() {
+        return mock(SecurityJwtEventsPublisher.class);
     }
 
     @Bean
-    SecurityJwtIncidentPublisher securityJwtIncidentPublisher() {
-        return mock(SecurityJwtIncidentPublisher.class);
+    SecurityJwtIncidentsPublisher securityJwtIncidentPublisher() {
+        return mock(SecurityJwtIncidentsPublisher.class);
     }
 
     @Bean

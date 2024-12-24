@@ -7,8 +7,8 @@ import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.dto.requests.RequestUserRegistration1;
 import jbst.iam.domain.events.EventRegistration0Failure;
 import jbst.iam.domain.events.EventRegistration1Failure;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.InvitationsRepository;
 import jbst.iam.repositories.UsersRepository;
 import jbst.iam.validators.BaseRegistrationRequestsValidator;
@@ -23,8 +23,8 @@ import static jbst.foundation.utilities.exceptions.ExceptionsMessagesUtility.ent
 public abstract class AbstractBaseRegistrationRequestsValidator implements BaseRegistrationRequestsValidator {
 
     // Publishers
-    protected final SecurityJwtPublisher securityJwtPublisher;
-    protected final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
+    protected final SecurityJwtEventsPublisher securityJwtPublisher;
+    protected final SecurityJwtIncidentsPublisher securityJwtIncidentPublisher;
     // Repositories
     protected final InvitationsRepository invitationsRepository;
     protected final UsersRepository usersRepository;

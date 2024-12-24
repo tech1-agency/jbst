@@ -1,8 +1,8 @@
-package jbst.iam.events.publishers;
+package jbst.iam.events.publishers.events;
 
 import jbst.iam.domain.events.*;
 
-public interface SecurityJwtPublisher {
+public interface SecurityJwtEventsPublisher {
     void publishAuthenticationLogin(EventAuthenticationLogin event);
     void publishAuthenticationLoginFailure(EventAuthenticationLoginFailure event);
     void publishAuthenticationLogout(EventAuthenticationLogout event);

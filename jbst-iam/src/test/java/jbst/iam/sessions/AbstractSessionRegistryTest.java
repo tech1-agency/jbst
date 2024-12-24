@@ -12,8 +12,8 @@ import jbst.iam.domain.jwt.JwtRefreshToken;
 import jbst.iam.domain.jwt.RequestAccessToken;
 import jbst.iam.domain.sessions.Session;
 import jbst.iam.domain.sessions.SessionsExpiredTable;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.UsersSessionsRepository;
 import jbst.iam.services.BaseUsersSessionsService;
 import lombok.RequiredArgsConstructor;
@@ -62,13 +62,13 @@ class AbstractSessionRegistryTest {
     @Configuration
     static class ContextConfiguration {
         @Bean
-        SecurityJwtPublisher securityJwtPublisher() {
-            return mock(SecurityJwtPublisher.class);
+        SecurityJwtEventsPublisher securityJwtPublisher() {
+            return mock(SecurityJwtEventsPublisher.class);
         }
 
         @Bean
-        SecurityJwtIncidentPublisher securityJwtIncidentPublisher() {
-            return mock(SecurityJwtIncidentPublisher.class);
+        SecurityJwtIncidentsPublisher securityJwtIncidentPublisher() {
+            return mock(SecurityJwtIncidentsPublisher.class);
         }
 
         @Bean
@@ -93,8 +93,8 @@ class AbstractSessionRegistryTest {
     }
 
     // Publishers
-    private final SecurityJwtPublisher securityJwtPublisher;
-    private final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
+    private final SecurityJwtEventsPublisher securityJwtPublisher;
+    private final SecurityJwtIncidentsPublisher securityJwtIncidentPublisher;
     // Services
     private final BaseUsersSessionsService baseUsersSessionsService;
     // Repositories

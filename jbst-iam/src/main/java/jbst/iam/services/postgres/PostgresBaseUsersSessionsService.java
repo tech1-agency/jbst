@@ -1,6 +1,6 @@
 package jbst.iam.services.postgres;
 
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.postgres.PostgresUsersSessionsRepository;
 import jbst.iam.services.abstracts.AbstractBaseUsersSessionsService;
 import jbst.iam.utils.SecurityJwtTokenUtils;
@@ -15,13 +15,13 @@ public class PostgresBaseUsersSessionsService extends AbstractBaseUsersSessionsS
 
     @Autowired
     public PostgresBaseUsersSessionsService(
-            SecurityJwtPublisher securityJwtPublisher,
+            SecurityJwtEventsPublisher securityJwtEventsPublisher,
             PostgresUsersSessionsRepository usersSessionsRepository,
             UserMetadataUtils userMetadataUtils,
             SecurityJwtTokenUtils securityJwtTokenUtils
     ) {
         super(
-                securityJwtPublisher,
+                securityJwtEventsPublisher,
                 usersSessionsRepository,
                 userMetadataUtils,
                 securityJwtTokenUtils

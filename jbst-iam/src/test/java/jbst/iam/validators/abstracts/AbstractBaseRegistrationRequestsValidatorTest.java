@@ -7,8 +7,8 @@ import jbst.iam.domain.dto.requests.RequestUserRegistration1;
 import jbst.iam.domain.events.EventRegistration0Failure;
 import jbst.iam.domain.events.EventRegistration1Failure;
 import jbst.iam.domain.jwt.JwtUser;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.InvitationsRepository;
 import jbst.iam.repositories.UsersRepository;
 import jbst.iam.configurations.TestConfigurationValidators;
@@ -47,22 +47,22 @@ class AbstractBaseRegistrationRequestsValidatorTest {
     static class ContextConfiguration {
         private final InvitationsRepository invitationsRepository;
         private final UsersRepository usersRepository;
-        private final SecurityJwtPublisher securityJwtPublisher;
-        private final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
+        private final SecurityJwtEventsPublisher securityJwtEventsPublisher;
+        private final SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher;
 
         @Bean
         BaseRegistrationRequestsValidator baseInvitationRequestsValidator() {
             return new AbstractBaseRegistrationRequestsValidator(
-                    this.securityJwtPublisher,
-                    this.securityJwtIncidentPublisher,
+                    this.securityJwtEventsPublisher,
+                    this.securityJwtIncidentsPublisher,
                     this.invitationsRepository,
                     this.usersRepository
             ) {};
         }
     }
 
-    private final SecurityJwtPublisher securityJwtPublisher;
-    private final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
+    private final SecurityJwtEventsPublisher securityJwtEventsPublisher;
+    private final SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher;
     private final InvitationsRepository invitationsRepository;
     private final UsersRepository usersRepository;
 
@@ -71,8 +71,8 @@ class AbstractBaseRegistrationRequestsValidatorTest {
     @BeforeEach
     void beforeEach() {
         reset(
-                this.securityJwtPublisher,
-                this.securityJwtIncidentPublisher,
+                this.securityJwtEventsPublisher,
+                this.securityJwtIncidentsPublisher,
                 this.invitationsRepository,
                 this.usersRepository
         );
@@ -81,8 +81,8 @@ class AbstractBaseRegistrationRequestsValidatorTest {
     @AfterEach
     void afterEach() {
         verifyNoMoreInteractions(
-                this.securityJwtIncidentPublisher,
-                this.securityJwtPublisher,
+                this.securityJwtIncidentsPublisher,
+                this.securityJwtEventsPublisher,
                 this.invitationsRepository,
                 this.usersRepository
         );
@@ -103,14 +103,14 @@ class AbstractBaseRegistrationRequestsValidatorTest {
                 .isInstanceOf(RegistrationException.class)
                 .hasMessage(exception);
         verify(this.usersRepository).existsByUsername(request.username());
-        verify(this.securityJwtPublisher).publishRegistration0Failure(
+        verify(this.securityJwtEventsPublisher).publishRegistration0Failure(
                 new EventRegistration0Failure(
                         request.email(),
                         request.username(),
                         exception
                 )
         );
-        verify(this.securityJwtIncidentPublisher).publishRegistration0Failure(
+        verify(this.securityJwtIncidentsPublisher).publishRegistration0Failure(
                 new IncidentRegistration0Failure(
                         request.email(),
                         request.username(),
@@ -136,14 +136,14 @@ class AbstractBaseRegistrationRequestsValidatorTest {
                 .hasMessage(exception);
         verify(this.usersRepository).existsByUsername(request.username());
         verify(this.usersRepository).existsByEmail(request.email());
-        verify(this.securityJwtPublisher).publishRegistration0Failure(
+        verify(this.securityJwtEventsPublisher).publishRegistration0Failure(
                 new EventRegistration0Failure(
                         request.email(),
                         request.username(),
                         exception
                 )
         );
-        verify(this.securityJwtIncidentPublisher).publishRegistration0Failure(
+        verify(this.securityJwtIncidentsPublisher).publishRegistration0Failure(
                 new IncidentRegistration0Failure(
                         request.email(),
                         request.username(),
@@ -182,14 +182,14 @@ class AbstractBaseRegistrationRequestsValidatorTest {
                 .isInstanceOf(RegistrationException.class)
                 .hasMessage(exception);
         verify(this.usersRepository).findByUsernameAsJwtUserOrNull(request.username());
-        verify(this.securityJwtPublisher).publishRegistration1Failure(
+        verify(this.securityJwtEventsPublisher).publishRegistration1Failure(
                 EventRegistration1Failure.of(
                         request.username(),
                         request.code(),
                         exception
                 )
         );
-        verify(this.securityJwtIncidentPublisher).publishRegistration1Failure(
+        verify(this.securityJwtIncidentsPublisher).publishRegistration1Failure(
                 IncidentRegistration1Failure.of(
                         request.username(),
                         request.code(),
@@ -216,7 +216,7 @@ class AbstractBaseRegistrationRequestsValidatorTest {
                 .hasMessage(exception);
         verify(this.usersRepository).findByUsernameAsJwtUserOrNull(request.username());
         verify(this.invitationsRepository).findByCodeAsAny(request.code());
-        verify(this.securityJwtPublisher).publishRegistration1Failure(
+        verify(this.securityJwtEventsPublisher).publishRegistration1Failure(
                 new EventRegistration1Failure(
                         request.username(),
                         request.code(),
@@ -224,7 +224,7 @@ class AbstractBaseRegistrationRequestsValidatorTest {
                         exception
                 )
         );
-        verify(this.securityJwtIncidentPublisher).publishRegistration1Failure(
+        verify(this.securityJwtIncidentsPublisher).publishRegistration1Failure(
                 new IncidentRegistration1Failure(
                         request.username(),
                         request.code(),
@@ -253,14 +253,14 @@ class AbstractBaseRegistrationRequestsValidatorTest {
                 .hasMessage(exception);
         verify(this.usersRepository).findByUsernameAsJwtUserOrNull(username);
         verify(this.invitationsRepository).findByCodeAsAny(invitation);
-        verify(this.securityJwtPublisher).publishRegistration1Failure(
+        verify(this.securityJwtEventsPublisher).publishRegistration1Failure(
                 EventRegistration1Failure.of(
                         username,
                         invitation,
                         exception
                 )
         );
-        verify(this.securityJwtIncidentPublisher).publishRegistration1Failure(
+        verify(this.securityJwtIncidentsPublisher).publishRegistration1Failure(
                 IncidentRegistration1Failure.of(
                         username,
                         invitation,

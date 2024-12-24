@@ -8,8 +8,8 @@ import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.dto.requests.RequestUserRegistration1;
 import jbst.iam.domain.events.EventRegistration0;
 import jbst.iam.domain.events.EventRegistration1;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.services.BaseRegistrationService;
 import jbst.iam.validators.BaseRegistrationRequestsValidator;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +33,8 @@ public class BaseSecurityRegistrationResource {
     // Services
     private final BaseRegistrationService baseRegistrationService;
     // Publishers
-    private final SecurityJwtPublisher securityJwtPublisher;
-    private final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
+    private final SecurityJwtEventsPublisher securityJwtEventsPublisher;
+    private final SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher;
     // Validators
     private final BaseRegistrationRequestsValidator baseRegistrationRequestsValidator;
 
@@ -44,8 +44,8 @@ public class BaseSecurityRegistrationResource {
         request = request.createReworkedUkraineZoneId();
         this.baseRegistrationRequestsValidator.validateRegistrationRequest0(request);
         this.baseRegistrationService.register0(request);
-        this.securityJwtPublisher.publishRegistration0(new EventRegistration0(request));
-        this.securityJwtIncidentPublisher.publishRegistration0(new IncidentRegistration0(request.username()));
+        this.securityJwtEventsPublisher.publishRegistration0(new EventRegistration0(request));
+        this.securityJwtIncidentsPublisher.publishRegistration0(new IncidentRegistration0(request.username()));
     }
 
     @PostMapping("/register1")
@@ -54,7 +54,7 @@ public class BaseSecurityRegistrationResource {
         request = request.createReworkedUkraineZoneId();
         this.baseRegistrationRequestsValidator.validateRegistrationRequest1(request);
         this.baseRegistrationService.register1(request);
-        this.securityJwtPublisher.publishRegistration1(new EventRegistration1(request));
-        this.securityJwtIncidentPublisher.publishRegistration1(new IncidentRegistration1(request.username()));
+        this.securityJwtEventsPublisher.publishRegistration1(new EventRegistration1(request));
+        this.securityJwtIncidentsPublisher.publishRegistration1(new IncidentRegistration1(request.username()));
     }
 }

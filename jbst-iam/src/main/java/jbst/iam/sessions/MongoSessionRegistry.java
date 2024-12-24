@@ -1,21 +1,21 @@
 package jbst.iam.sessions;
 
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.mongodb.MongoUsersSessionsRepository;
 import jbst.iam.services.mongodb.MongoBaseUsersSessionsService;
 
 public class MongoSessionRegistry extends AbstractSessionRegistry {
 
     public MongoSessionRegistry(
-            SecurityJwtPublisher securityJwtPublisher,
-            SecurityJwtIncidentPublisher securityJwtIncidentPublisher,
+            SecurityJwtEventsPublisher securityJwtEventsPublisher,
+            SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher,
             MongoBaseUsersSessionsService baseUsersSessionsService,
             MongoUsersSessionsRepository usersSessionsRepository
     ) {
         super(
-                securityJwtPublisher,
-                securityJwtIncidentPublisher,
+                securityJwtEventsPublisher,
+                securityJwtIncidentsPublisher,
                 baseUsersSessionsService,
                 usersSessionsRepository
         );

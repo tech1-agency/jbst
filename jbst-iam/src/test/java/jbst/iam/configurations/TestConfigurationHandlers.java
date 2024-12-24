@@ -1,8 +1,8 @@
 package jbst.iam.configurations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.utils.HttpRequestUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,13 +17,13 @@ import static org.mockito.Mockito.mock;
 public class TestConfigurationHandlers {
 
     @Bean
-    SecurityJwtPublisher securityJwtPublisher() {
-        return mock(SecurityJwtPublisher.class);
+    SecurityJwtEventsPublisher securityJwtPublisher() {
+        return mock(SecurityJwtEventsPublisher.class);
     }
 
     @Bean
-    SecurityJwtIncidentPublisher securityJwtIncidentPublisher() {
-        return mock(SecurityJwtIncidentPublisher.class);
+    SecurityJwtIncidentsPublisher securityJwtIncidentPublisher() {
+        return mock(SecurityJwtIncidentsPublisher.class);
     }
 
     @Bean

@@ -1,7 +1,8 @@
 package jbst.iam.events.publishers.base;
 
 import jbst.iam.domain.events.*;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
+import jbst.iam.events.publishers.events.base.BaseSecurityJwtEventsPublisher;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ import static jbst.foundation.utilities.random.EntityUtility.entity;
 @ExtendWith({ SpringExtension.class })
 @ContextConfiguration(loader= AnnotationConfigContextLoader.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class BaseSecurityJwtPublisherTest {
+class BaseSecurityJwtEventsPublisherTest {
 
     @Configuration
     static class ContextConfiguration {
@@ -33,8 +34,8 @@ class BaseSecurityJwtPublisherTest {
         }
 
         @Bean
-        SecurityJwtPublisher securityJwtPublisher() {
-            return new BaseSecurityJwtPublisher(
+        SecurityJwtEventsPublisher securityJwtPublisher() {
+            return new BaseSecurityJwtEventsPublisher(
                     this.applicationEventPublisher()
             );
         }
@@ -42,7 +43,7 @@ class BaseSecurityJwtPublisherTest {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    private final SecurityJwtPublisher componentUnderTest;
+    private final SecurityJwtEventsPublisher componentUnderTest;
 
     @BeforeEach
     void beforeEach() {

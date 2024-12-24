@@ -1,8 +1,8 @@
-package jbst.iam.events.publishers.base;
+package jbst.iam.events.publishers.events.base;
 
 import jbst.foundation.domain.pubsub.AbstractEventPublisher;
 import jbst.iam.domain.events.*;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static jbst.foundation.domain.constants.JbstConstants.Logs.USER_ACTION;
 @Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class BaseSecurityJwtPublisher extends AbstractEventPublisher implements SecurityJwtPublisher {
+public class BaseSecurityJwtEventsPublisher extends AbstractEventPublisher implements SecurityJwtEventsPublisher {
 
     // Spring Publisher
     private final ApplicationEventPublisher applicationEventPublisher;

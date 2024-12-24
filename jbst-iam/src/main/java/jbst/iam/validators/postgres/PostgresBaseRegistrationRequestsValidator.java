@@ -1,7 +1,7 @@
 package jbst.iam.validators.postgres;
 
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.postgres.PostgresInvitationsRepository;
 import jbst.iam.repositories.postgres.PostgresUsersRepository;
 import jbst.iam.validators.abtracts.AbstractBaseRegistrationRequestsValidator;
@@ -15,14 +15,14 @@ public class PostgresBaseRegistrationRequestsValidator extends AbstractBaseRegis
 
     @Autowired
     public PostgresBaseRegistrationRequestsValidator(
-            SecurityJwtPublisher securityJwtPublisher,
-            SecurityJwtIncidentPublisher securityJwtIncidentPublisher,
+            SecurityJwtEventsPublisher securityJwtEventsPublisher,
+            SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher,
             PostgresInvitationsRepository invitationsRepository,
             PostgresUsersRepository usersRepository
     ) {
         super(
-                securityJwtPublisher,
-                securityJwtIncidentPublisher,
+                securityJwtEventsPublisher,
+                securityJwtIncidentsPublisher,
                 invitationsRepository,
                 usersRepository
         );

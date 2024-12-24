@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jbst.iam.domain.events.EventAuthenticationLoginFailure;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.configurations.TestConfigurationHandlers;
 import jbst.iam.utils.HttpRequestUtils;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ class JwtAuthenticationEntryPointExceptionHandlerTest {
 
     }
 
-    private final SecurityJwtPublisher securityJwtPublisher;
+    private final SecurityJwtEventsPublisher securityJwtPublisher;
     private final HttpRequestUtils httpRequestUtils;
     private final ObjectMapper objectMapper;
 

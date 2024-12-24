@@ -22,7 +22,7 @@ import jbst.iam.domain.jwt.JwtAccessToken;
 import jbst.iam.domain.jwt.JwtRefreshToken;
 import jbst.iam.domain.jwt.JwtUser;
 import jbst.iam.domain.jwt.RequestAccessToken;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.UsersSessionsRepository;
 import jbst.iam.utils.SecurityJwtTokenUtils;
 import jbst.iam.utils.impl.SecurityJwtTokenUtilsImpl;
@@ -98,8 +98,8 @@ class AbstractBaseUsersSessionsServiceTest {
         private final JbstProperties jbstProperties;
 
         @Bean
-        SecurityJwtPublisher securityJwtPublisher() {
-            return mock(SecurityJwtPublisher.class);
+        SecurityJwtEventsPublisher securityJwtPublisher() {
+            return mock(SecurityJwtEventsPublisher.class);
         }
 
         @Bean
@@ -131,7 +131,7 @@ class AbstractBaseUsersSessionsServiceTest {
     }
 
     // Publishers
-    private final SecurityJwtPublisher securityJwtPublisher;
+    private final SecurityJwtEventsPublisher securityJwtEventsPublisher;
     // Repositories
     private final UsersSessionsRepository usersSessionsRepository;
     // Utils
@@ -142,7 +142,7 @@ class AbstractBaseUsersSessionsServiceTest {
     @BeforeEach
     void beforeEach() {
         reset(
-                this.securityJwtPublisher,
+                this.securityJwtEventsPublisher,
                 this.usersSessionsRepository,
                 this.userMetadataUtils
         );
@@ -151,7 +151,7 @@ class AbstractBaseUsersSessionsServiceTest {
     @AfterEach
     void afterEach() {
         verifyNoMoreInteractions(
-                this.securityJwtPublisher,
+                this.securityJwtEventsPublisher,
                 this.usersSessionsRepository,
                 this.userMetadataUtils
         );
@@ -219,7 +219,7 @@ class AbstractBaseUsersSessionsServiceTest {
         assertThat(whatTuple2.b()).isEqualTo("—");
         assertThat(actualDbUserSession.id()).isNotNull();
         var eventAC = ArgumentCaptor.forClass(EventSessionUserRequestMetadataAdd.class);
-        verify(this.securityJwtPublisher).publishSessionUserRequestMetadataAdd(eventAC.capture());
+        verify(this.securityJwtEventsPublisher).publishSessionUserRequestMetadataAdd(eventAC.capture());
         var event = eventAC.getValue();
         assertThat(event.username()).isEqualTo(username);
         assertThat(event.session().id()).isEqualTo(actualDbUserSession.id());
@@ -265,7 +265,7 @@ class AbstractBaseUsersSessionsServiceTest {
         assertThat(whatTuple2.b()).isEqualTo("—");
         assertThat(actualDbUserSession.id()).isNotNull();
         var eventAC = ArgumentCaptor.forClass(EventSessionUserRequestMetadataAdd.class);
-        verify(this.securityJwtPublisher).publishSessionUserRequestMetadataAdd(eventAC.capture());
+        verify(this.securityJwtEventsPublisher).publishSessionUserRequestMetadataAdd(eventAC.capture());
         var event = eventAC.getValue();
         assertThat(event.username()).isEqualTo(username);
         assertThat(event.session().id()).isNotEqualTo(actualDbUserSession.id());
@@ -298,7 +298,7 @@ class AbstractBaseUsersSessionsServiceTest {
         assertThat(newUserSession.metadata()).isEqualTo(oldSession.metadata());
         verify(this.usersSessionsRepository).delete(oldSession.id());
         var eventAC = ArgumentCaptor.forClass(EventSessionUserRequestMetadataAdd.class);
-        verify(this.securityJwtPublisher).publishSessionUserRequestMetadataAdd(eventAC.capture());
+        verify(this.securityJwtEventsPublisher).publishSessionUserRequestMetadataAdd(eventAC.capture());
         var event = eventAC.getValue();
         assertThat(event.username()).isEqualTo(username);
         assertThat(event.email()).isEqualTo(user.email());
@@ -479,7 +479,7 @@ class AbstractBaseUsersSessionsServiceTest {
         // Assert
         var eventAC = ArgumentCaptor.forClass(EventSessionUserRequestMetadataRenew.class);
         if (session.isRenewRequired()) {
-            verify(this.securityJwtPublisher).publishSessionUserRequestMetadataRenew(eventAC.capture());
+            verify(this.securityJwtEventsPublisher).publishSessionUserRequestMetadataRenew(eventAC.capture());
             var event = eventAC.getValue();
             assertThat(event.username()).isEqualTo(session.username());
             assertThat(event.session()).isEqualTo(session);

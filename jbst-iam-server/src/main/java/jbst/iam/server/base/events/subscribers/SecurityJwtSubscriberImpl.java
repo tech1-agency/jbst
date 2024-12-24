@@ -3,7 +3,7 @@ package jbst.iam.server.base.events.subscribers;
 import jbst.foundation.incidents.events.publishers.IncidentPublisher;
 import jbst.foundation.utils.UserMetadataUtils;
 import jbst.iam.domain.events.EventAuthenticationLogin;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
 import jbst.iam.events.subscribers.base.BaseSecurityJwtSubscriber;
 import jbst.iam.services.BaseUsersSessionsService;
 import jbst.iam.services.BaseUsersTokensService;
@@ -19,7 +19,7 @@ public class SecurityJwtSubscriberImpl extends BaseSecurityJwtSubscriber {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public SecurityJwtSubscriberImpl(
-            SecurityJwtIncidentPublisher securityJwtIncidentPublisher,
+            SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher,
             BaseUsersTokensService baseUsersTokensService,
             UsersEmailsService usersEmailsService,
             BaseUsersSessionsService baseUsersSessionsService,
@@ -27,7 +27,7 @@ public class SecurityJwtSubscriberImpl extends BaseSecurityJwtSubscriber {
             IncidentPublisher incidentPublisher
     ) {
         super(
-                securityJwtIncidentPublisher,
+                securityJwtIncidentsPublisher,
                 baseUsersTokensService,
                 usersEmailsService,
                 baseUsersSessionsService,

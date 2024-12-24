@@ -2,8 +2,8 @@ package jbst.iam.configurations;
 
 import jbst.iam.assistants.current.CurrentSessionAssistant;
 import jbst.iam.assistants.userdetails.JwtUserDetailsService;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.handlers.exceptions.ResourceExceptionHandler;
 import jbst.iam.services.*;
 import jbst.iam.services.base.BaseUsersEmailsService;
@@ -109,13 +109,13 @@ public class TestConfigurationResources {
     // Publishers
     // =================================================================================================================
     @Bean
-    SecurityJwtPublisher securityJwtPublisher() {
-        return mock(SecurityJwtPublisher.class);
+    SecurityJwtEventsPublisher securityJwtPublisher() {
+        return mock(SecurityJwtEventsPublisher.class);
     }
 
     @Bean
-    SecurityJwtIncidentPublisher securityJwtIncidentPublisher() {
-        return mock(SecurityJwtIncidentPublisher.class);
+    SecurityJwtIncidentsPublisher securityJwtIncidentPublisher() {
+        return mock(SecurityJwtIncidentsPublisher.class);
     }
 
     @Bean

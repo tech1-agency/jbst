@@ -3,8 +3,8 @@ package jbst.iam.configurations;
 import jakarta.annotation.PostConstruct;
 import jbst.iam.assistants.userdetails.MongoUserDetailsAssistant;
 import jbst.iam.essence.MongoBaseEssenceConstructor;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.mongodb.MongoInvitationsRepository;
 import jbst.iam.repositories.mongodb.MongoUsersRepository;
 import jbst.iam.repositories.mongodb.MongoUsersSessionsRepository;
@@ -67,17 +67,16 @@ public class ConfigurationMongo {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     MongoSessionRegistry mongoSessionRegistry(
-            SecurityJwtPublisher securityJwtPublisher,
-            SecurityJwtIncidentPublisher securityJwtIncidentPublisher,
+            SecurityJwtEventsPublisher securityJwtEventsPublisher,
+            SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher,
             MongoBaseUsersSessionsService mongoBaseUsersSessionsService,
             MongoUsersSessionsRepository mongoUsersSessionsRepository
     ) {
         return new MongoSessionRegistry(
-                securityJwtPublisher,
-                securityJwtIncidentPublisher,
+                securityJwtEventsPublisher,
+                securityJwtIncidentsPublisher,
                 mongoBaseUsersSessionsService,
                 mongoUsersSessionsRepository
         );
     }
-
 }

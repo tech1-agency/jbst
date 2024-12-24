@@ -13,8 +13,8 @@ import jbst.iam.domain.jwt.JwtAccessToken;
 import jbst.iam.domain.jwt.JwtRefreshToken;
 import jbst.iam.domain.jwt.RequestAccessToken;
 import jbst.iam.domain.sessions.Session;
-import jbst.iam.events.publishers.SecurityJwtIncidentPublisher;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.UsersSessionsRepository;
 import jbst.iam.services.BaseUsersSessionsService;
 import lombok.AccessLevel;
@@ -31,11 +31,11 @@ import static jbst.foundation.domain.constants.JbstConstants.Logs.USER_ACTION;
 @Slf4j
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractSessionRegistry implements SessionRegistry {
-    protected final Set<Session> sessions = ConcurrentHashMap.newKeySet();
+    protected final ConcurrentHashMap.KeySetView<Session, Boolean> sessions = ConcurrentHashMap.newKeySet();
 
     // Publishers
-    protected final SecurityJwtPublisher securityJwtPublisher;
-    protected final SecurityJwtIncidentPublisher securityJwtIncidentPublisher;
+    protected final SecurityJwtEventsPublisher securityJwtEventsPublisher;
+    protected final SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher;
     // Services
     protected final BaseUsersSessionsService baseUsersSessionsService;
     // Repositories
@@ -68,7 +68,7 @@ public abstract class AbstractSessionRegistry implements SessionRegistry {
         boolean added = this.sessions.add(session);
         if (added) {
             LOGGER.debug(USER_ACTION, username, "Session Registration");
-            this.securityJwtPublisher.publishAuthenticationLogin(new EventAuthenticationLogin(username));
+            this.securityJwtEventsPublisher.publishAuthenticationLogin(new EventAuthenticationLogin(username));
         }
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractSessionRegistry implements SessionRegistry {
         var added = this.sessions.add(newSession);
         if (added) {
             LOGGER.debug(USER_ACTION, username, "Session Renew");
-            this.securityJwtPublisher.publishSessionRefreshed(new EventSessionRefreshed(newSession));
+            this.securityJwtEventsPublisher.publishSessionRefreshed(new EventSessionRefreshed(newSession));
         }
     }
 
@@ -88,16 +88,16 @@ public abstract class AbstractSessionRegistry implements SessionRegistry {
         LOGGER.debug(USER_ACTION, username, "Session Deletion");
         var removed = this.sessions.removeIf(session -> session.accessToken().equals(accessToken));
         if (removed) {
-            this.securityJwtPublisher.publishAuthenticationLogout(new EventAuthenticationLogout(username));
+            this.securityJwtEventsPublisher.publishAuthenticationLogout(new EventAuthenticationLogout(username));
 
             var sessionTP = this.usersSessionsRepository.isPresent(accessToken);
 
             if (sessionTP.present()) {
                 var session = sessionTP.value();
-                this.securityJwtIncidentPublisher.publishAuthenticationLogoutFull(new IncidentAuthenticationLogoutFull(username, session.metadata()));
+                this.securityJwtIncidentsPublisher.publishAuthenticationLogoutFull(new IncidentAuthenticationLogoutFull(username, session.metadata()));
                 this.usersSessionsRepository.delete(session.id());
             } else {
-                this.securityJwtIncidentPublisher.publishAuthenticationLogoutMin(new IncidentAuthenticationLogoutMin(username));
+                this.securityJwtIncidentsPublisher.publishAuthenticationLogoutMin(new IncidentAuthenticationLogoutMin(username));
             }
         }
 
@@ -120,8 +120,8 @@ public abstract class AbstractSessionRegistry implements SessionRegistry {
             if (sessionOpt.isPresent()) {
                 var session = sessionOpt.get();
                 this.sessions.remove(session);
-                this.securityJwtPublisher.publishSessionExpired(new EventSessionExpired(session));
-                this.securityJwtIncidentPublisher.publishSessionExpired(new IncidentSessionExpired(username, metadata));
+                this.securityJwtEventsPublisher.publishSessionExpired(new EventSessionExpired(session));
+                this.securityJwtIncidentsPublisher.publishSessionExpired(new IncidentSessionExpired(username, metadata));
             }
         });
 

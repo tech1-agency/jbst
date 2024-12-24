@@ -11,7 +11,7 @@ import jbst.iam.domain.jwt.JwtRefreshToken;
 import jbst.iam.domain.jwt.JwtUser;
 import jbst.iam.domain.jwt.RequestAccessToken;
 import jbst.iam.domain.sessions.SessionsExpiredTable;
-import jbst.iam.events.publishers.SecurityJwtPublisher;
+import jbst.iam.events.publishers.events.SecurityJwtEventsPublisher;
 import jbst.iam.repositories.UsersSessionsRepository;
 import jbst.iam.services.BaseUsersSessionsService;
 import jbst.iam.utils.SecurityJwtTokenUtils;
@@ -41,7 +41,7 @@ import static jbst.foundation.utilities.time.TimestampUtility.isPast;
 public abstract class AbstractBaseUsersSessionsService implements BaseUsersSessionsService {
 
     // Publishers
-    protected final SecurityJwtPublisher securityJwtPublisher;
+    protected final SecurityJwtEventsPublisher securityJwtPublisher;
     // Repositories
     protected final UsersSessionsRepository usersSessionsRepository;
     // Utils
