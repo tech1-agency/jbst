@@ -12,10 +12,10 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 @EnableConfigurationProperties({
         JbstProperties.class
 })
-public class ConfigurationBaseSecurityJwtWebMvc extends ConfigurationWebMVC {
+public class ConfigurationBaseSecurityJwtWebMVC extends ConfigurationWebMVC {
 
     @Autowired
-    public ConfigurationBaseSecurityJwtWebMvc(JbstProperties jbstProperties) {
+    public ConfigurationBaseSecurityJwtWebMVC(JbstProperties jbstProperties) {
         super(jbstProperties);
     }
 

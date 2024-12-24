@@ -40,14 +40,14 @@ class ConfigurationBaseSecurityJwtMvcTest {
         private final JbstProperties jbstProperties;
 
         @Bean
-        ConfigurationBaseSecurityJwtWebMvc applicationMVC() {
-            return new ConfigurationBaseSecurityJwtWebMvc(
+        ConfigurationBaseSecurityJwtWebMVC applicationMVC() {
+            return new ConfigurationBaseSecurityJwtWebMVC(
                     this.jbstProperties
             );
         }
     }
 
-    private final ConfigurationBaseSecurityJwtWebMvc componentUnderTest;
+    private final ConfigurationBaseSecurityJwtWebMVC componentUnderTest;
 
     @Test
     void beansTests() {

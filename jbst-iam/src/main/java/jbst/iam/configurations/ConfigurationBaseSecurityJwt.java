@@ -48,10 +48,9 @@ import static org.springframework.http.HttpMethod.*;
 @EnableWebSecurity
 @Import({
         ConfigurationHardwareMonitoring.class,
-        ConfigurationUserMetadata.class,
+        ConfigurationUtilities.class,
         ConfigurationSpringBootServer.class,
-        ConfigurationJasypt.class,
-        ConfigurationBaseSecurityJwtWebMvc.class,
+        ConfigurationBaseSecurityJwtWebMVC.class,
         ConfigurationBaseSecurityJwtFilters.class,
         ConfigurationBaseSecurityJwtPasswords.class,
         ConfigurationIncidents.class,

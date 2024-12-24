@@ -1,7 +1,7 @@
 package jbst.foundation.utilities.geo.functions.ipapi.utility.impl;
 
 import jbst.foundation.configurations.TestConfigurationPropertiesJbstHardcoded;
-import jbst.foundation.configurations.ConfigurationUserMetadata;
+import jbst.foundation.configurations.ConfigurationUtilities;
 import jbst.foundation.domain.exceptions.geo.GeoLocationNotFoundException;
 import jbst.foundation.domain.http.requests.IPAddress;
 import jbst.foundation.utilities.geo.functions.ipapi.utility.IPAPIGeoLocationUtility;
@@ -25,7 +25,7 @@ class IPAPIGeoLocationUtilityImplConsoleTest {
 
     @Configuration
     @Import({
-            ConfigurationUserMetadata.class,
+            ConfigurationUtilities.class,
             TestConfigurationPropertiesJbstHardcoded.class
     })
     @RequiredArgsConstructor(onConstructor = @__(@Autowired))

@@ -33,7 +33,7 @@ import org.springframework.core.io.ResourceLoader;
         JbstProperties.class
 })
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ConfigurationUserMetadata {
+public class ConfigurationUtilities {
 
     // Resources
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
