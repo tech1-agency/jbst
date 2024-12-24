@@ -6,6 +6,7 @@ import jbst.foundation.domain.exceptions.authentication.RegistrationException;
 import jbst.foundation.domain.exceptions.base.TooManyRequestsException;
 import jbst.foundation.domain.exceptions.cookies.CookieNotFoundException;
 import jbst.foundation.domain.exceptions.tokens.*;
+import jbst.foundation.incidents.events.publishers.IncidentPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import static jbst.foundation.utilities.exceptions.ExceptionsMessagesUtility.une
 @ControllerAdvice
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ResourceExceptionHandler {
+
+    private final IncidentPublisher incidentPublisher;
 
     // =================================================================================================================
     // DEDICATED EXCEPTIONS
@@ -150,6 +153,7 @@ public class ResourceExceptionHandler {
                     unexpectedErrorOccurred(),
                     ex.getMessage()
             );
+            this.incidentPublisher.publishThrowable(ex);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

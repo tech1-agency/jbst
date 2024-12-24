@@ -3,3 +3,4 @@
 — Modification: SecurityJwtPublisher -> SecurityJwtEventsPublisher
 — Modification: SecurityJwtIncidentPublisher -> SecurityJwtIncidentsPublisher
 — Modification: pub/sub -> events/incidents (interface/base)
+— Modification: ResourceExceptionHandler, publish incidents

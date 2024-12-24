@@ -28,9 +28,12 @@ import static org.mockito.Mockito.mock;
 @EnableWebMvc
 public class TestConfigurationResources {
 
+    // =================================================================================================================
+    // Exceptions
+    // =================================================================================================================
     @Bean
     ResourceExceptionHandler resourceExceptionHandler() {
-        return new ResourceExceptionHandler();
+        return new ResourceExceptionHandler(this.incidentPublisher());
     }
 
     // =================================================================================================================
@@ -42,7 +45,7 @@ public class TestConfigurationResources {
     }
 
     // =================================================================================================================
-    // Session
+    // Sessions
     // =================================================================================================================
     @Bean
     SessionRegistry sessionRegistry() {
@@ -53,32 +56,32 @@ public class TestConfigurationResources {
     // Services
     // =================================================================================================================
     @Bean
-    BaseUsersService userService() {
+    BaseUsersService baseUsersService() {
         return mock(BaseUsersService.class);
     }
 
     @Bean
-    BaseUsersTokensService usersTokensService() {
+    BaseUsersTokensService baseUsersTokensService() {
         return mock(BaseUsersTokensService.class);
     }
 
     @Bean
-    BaseUsersEmailsService usersEmailsService() {
+    BaseUsersEmailsService baseUsersEmailsService() {
         return mock(BaseUsersEmailsService.class);
     }
 
     @Bean
-    BaseInvitationsService invitationsService() {
+    BaseInvitationsService baseInvitationsService() {
         return mock(BaseInvitationsService.class);
     }
 
     @Bean
-    BaseRegistrationService registrationService() {
+    BaseRegistrationService baseRegistrationService() {
         return mock(BaseRegistrationService.class);
     }
 
     @Bean
-    BaseSuperadminService superadminService() {
+    BaseSuperadminService baseSuperadminService() {
         return mock(BaseSuperadminService.class);
     }
 
@@ -88,7 +91,7 @@ public class TestConfigurationResources {
     }
 
     @Bean
-    BaseUsersSessionsService jwtRefreshTokenService() {
+    BaseUsersSessionsService baseUsersSessionsService() {
         return mock(BaseUsersSessionsService.class);
     }
 
@@ -109,12 +112,12 @@ public class TestConfigurationResources {
     // Publishers
     // =================================================================================================================
     @Bean
-    SecurityJwtEventsPublisher securityJwtPublisher() {
+    SecurityJwtEventsPublisher securityJwtEventsPublisher() {
         return mock(SecurityJwtEventsPublisher.class);
     }
 
     @Bean
-    SecurityJwtIncidentsPublisher securityJwtIncidentPublisher() {
+    SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher() {
         return mock(SecurityJwtIncidentsPublisher.class);
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jbst.iam.handlers.exceptions.ResourceExceptionHandler;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -22,10 +23,13 @@ public abstract class TestRunnerResources {
 
     protected MockMvc mvc;
 
+    @Autowired
+    protected ResourceExceptionHandler resourceExceptionHandler;
+
     public void beforeByResource(Object object) {
         this.mvc = MockMvcBuilders
                 .standaloneSetup(object)
-                .setControllerAdvice(new ResourceExceptionHandler())
+                .setControllerAdvice(this.resourceExceptionHandler)
                 .build();
     }
 
