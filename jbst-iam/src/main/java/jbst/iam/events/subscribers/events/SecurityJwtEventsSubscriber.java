@@ -1,9 +1,9 @@
-package jbst.iam.events.subscribers;
+package jbst.iam.events.subscribers.events;
 
 import jbst.iam.domain.events.*;
 import org.springframework.context.event.EventListener;
 
-public interface SecurityJwtSubscriber {
+public interface SecurityJwtEventsSubscriber {
     @EventListener
     void onAuthenticationLogin(EventAuthenticationLogin event);
     @EventListener

@@ -1,4 +1,4 @@
-package jbst.iam.events.subscribers.impl;
+package jbst.iam.events.subscribers.incidents.base;
 
 import jbst.foundation.domain.pubsub.AbstractEventSubscriber;
 import jbst.foundation.incidents.domain.authetication.*;
@@ -9,7 +9,7 @@ import jbst.foundation.incidents.domain.registration.IncidentRegistration1Failur
 import jbst.foundation.incidents.domain.session.IncidentSessionExpired;
 import jbst.foundation.incidents.domain.session.IncidentSessionRefreshed;
 import jbst.foundation.incidents.feigns.clients.IncidentClient;
-import jbst.iam.events.subscribers.SecurityJwtIncidentSubscriber;
+import jbst.iam.events.subscribers.incidents.SecurityJwtIncidentsSubscriber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import static jbst.foundation.domain.constants.JbstConstants.Logs.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SecurityJwtIncidentSubscriberImpl extends AbstractEventSubscriber implements SecurityJwtIncidentSubscriber {
+public class BaseSecurityJwtIncidentsSubscriber extends AbstractEventSubscriber implements SecurityJwtIncidentsSubscriber {
 
     // Clients
     private final IncidentClient incidentClient;

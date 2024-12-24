@@ -18,7 +18,8 @@ import jbst.iam.domain.dto.requests.RequestUserRegistration0;
 import jbst.iam.domain.events.*;
 import jbst.iam.domain.functions.FunctionAccountAccessed;
 import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
-import jbst.iam.events.subscribers.SecurityJwtSubscriber;
+import jbst.iam.events.subscribers.events.SecurityJwtEventsSubscriber;
+import jbst.iam.events.subscribers.events.base.BaseSecurityJwtEventsSubscriber;
 import jbst.iam.services.BaseUsersSessionsService;
 import jbst.iam.services.BaseUsersTokensService;
 import jbst.iam.services.UsersEmailsService;
@@ -49,7 +50,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith({ SpringExtension.class })
 @ContextConfiguration(loader= AnnotationConfigContextLoader.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class BaseSecurityJwtSubscriberTest {
+class BaseSecurityJwtEventsSubscriberTest {
 
     private static Stream<Arguments> exceptionalExecutionParams() {
         return Stream.of(
@@ -180,8 +181,8 @@ class BaseSecurityJwtSubscriberTest {
         }
 
         @Bean
-        SecurityJwtSubscriber securityJwtSubscriber() {
-            return new BaseSecurityJwtSubscriber(
+        SecurityJwtEventsSubscriber securityJwtSubscriber() {
+            return new BaseSecurityJwtEventsSubscriber(
                     this.securityJwtIncidentPublisher(),
                     this.baseUsersTokensService(),
                     this.userEmailService(),
@@ -203,7 +204,7 @@ class BaseSecurityJwtSubscriberTest {
     // Incidents
     private final IncidentPublisher incidentPublisher;
 
-    private final SecurityJwtSubscriber componentUnderTest;
+    private final SecurityJwtEventsSubscriber componentUnderTest;
 
     @BeforeEach
     void beforeEach() {

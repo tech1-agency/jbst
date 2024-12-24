@@ -3,7 +3,8 @@ package jbst.iam.events.subscribers.impl;
 import jbst.foundation.incidents.domain.authetication.*;
 import jbst.foundation.incidents.domain.registration.IncidentRegistration0;
 import jbst.foundation.incidents.domain.registration.IncidentRegistration0Failure;
-import jbst.iam.events.subscribers.SecurityJwtIncidentSubscriber;
+import jbst.iam.events.subscribers.incidents.SecurityJwtIncidentsSubscriber;
+import jbst.iam.events.subscribers.incidents.base.BaseSecurityJwtIncidentsSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ import static jbst.foundation.utilities.random.EntityUtility.entity;
 @ExtendWith({ SpringExtension.class })
 @ContextConfiguration(loader= AnnotationConfigContextLoader.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class SecurityJwtIncidentSubscriberImplTest {
+class BaseSecurityJwtIncidentsSubscriberTest {
 
     @Configuration
     static class ContextConfiguration {
@@ -37,8 +38,8 @@ class SecurityJwtIncidentSubscriberImplTest {
         }
 
         @Bean
-        SecurityJwtIncidentSubscriber securityJwtIncidentSubscriber() {
-            return new SecurityJwtIncidentSubscriberImpl(
+        SecurityJwtIncidentsSubscriber securityJwtIncidentSubscriber() {
+            return new BaseSecurityJwtIncidentsSubscriber(
                     this.incidentClient()
             );
         }
@@ -47,7 +48,7 @@ class SecurityJwtIncidentSubscriberImplTest {
     // Clients
     private final IncidentClient incidentClient;
 
-    private final SecurityJwtIncidentSubscriber componentUnderTest;
+    private final SecurityJwtIncidentsSubscriber componentUnderTest;
 
     @BeforeEach
     void beforeEach() {

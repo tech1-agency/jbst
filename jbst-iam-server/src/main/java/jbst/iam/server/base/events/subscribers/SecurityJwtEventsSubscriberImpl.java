@@ -4,7 +4,7 @@ import jbst.foundation.incidents.events.publishers.IncidentPublisher;
 import jbst.foundation.utils.UserMetadataUtils;
 import jbst.iam.domain.events.EventAuthenticationLogin;
 import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
-import jbst.iam.events.subscribers.base.BaseSecurityJwtSubscriber;
+import jbst.iam.events.subscribers.events.base.BaseSecurityJwtEventsSubscriber;
 import jbst.iam.services.BaseUsersSessionsService;
 import jbst.iam.services.BaseUsersTokensService;
 import jbst.iam.services.UsersEmailsService;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class SecurityJwtSubscriberImpl extends BaseSecurityJwtSubscriber {
+public class SecurityJwtEventsSubscriberImpl extends BaseSecurityJwtEventsSubscriber {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public SecurityJwtSubscriberImpl(
+    public SecurityJwtEventsSubscriberImpl(
             SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher,
             BaseUsersTokensService baseUsersTokensService,
             UsersEmailsService usersEmailsService,

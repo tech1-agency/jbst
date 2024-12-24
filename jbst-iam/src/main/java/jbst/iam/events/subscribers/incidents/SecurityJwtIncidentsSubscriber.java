@@ -1,4 +1,4 @@
-package jbst.iam.events.subscribers;
+package jbst.iam.events.subscribers.incidents;
 
 import jbst.foundation.incidents.domain.authetication.*;
 import jbst.foundation.incidents.domain.registration.IncidentRegistration0;
@@ -9,7 +9,7 @@ import jbst.foundation.incidents.domain.registration.IncidentRegistration1Failur
 import jbst.foundation.incidents.domain.session.IncidentSessionExpired;
 import jbst.foundation.incidents.domain.session.IncidentSessionRefreshed;
 
-public interface SecurityJwtIncidentSubscriber {
+public interface SecurityJwtIncidentsSubscriber {
     @EventListener
     void onEvent(IncidentAuthenticationLogin incident);
     @EventListener

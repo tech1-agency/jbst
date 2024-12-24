@@ -42,7 +42,7 @@ import jbst.foundation.domain.properties.JbstProperties;
         "jbst.iam.handshakes",
         "jbst.iam.resources.websockets",
         "jbst.iam.tasks.hardware",
-        "jbst.iam.template",
+        "jbst.iam.template"
 })
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))

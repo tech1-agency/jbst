@@ -1,4 +1,4 @@
-package jbst.iam.events.subscribers.base;
+package jbst.iam.events.subscribers.events.base;
 
 import jbst.foundation.domain.base.UsernamePasswordCredentials;
 import jbst.foundation.domain.http.requests.UserRequestMetadata;
@@ -13,7 +13,7 @@ import jbst.iam.domain.enums.AccountAccessMethod;
 import jbst.iam.domain.events.*;
 import jbst.iam.domain.functions.FunctionAccountAccessed;
 import jbst.iam.events.publishers.incidents.SecurityJwtIncidentsPublisher;
-import jbst.iam.events.subscribers.SecurityJwtSubscriber;
+import jbst.iam.events.subscribers.events.SecurityJwtEventsSubscriber;
 import jbst.iam.services.BaseUsersSessionsService;
 import jbst.iam.services.BaseUsersTokensService;
 import jbst.iam.services.UsersEmailsService;
@@ -27,7 +27,7 @@ import static jbst.foundation.domain.constants.JbstConstants.Logs.USER_ACTION;
 @SuppressWarnings("LoggingSimilarMessage")
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class BaseSecurityJwtSubscriber extends AbstractEventSubscriber implements SecurityJwtSubscriber {
+public class BaseSecurityJwtEventsSubscriber extends AbstractEventSubscriber implements SecurityJwtEventsSubscriber {
 
     // Publishers
     private final SecurityJwtIncidentsPublisher securityJwtIncidentsPublisher;
