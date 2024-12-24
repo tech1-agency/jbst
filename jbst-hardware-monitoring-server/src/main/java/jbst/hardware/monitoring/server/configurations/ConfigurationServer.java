@@ -18,6 +18,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Slf4j
 @Configuration
@@ -38,6 +41,16 @@ public class ConfigurationServer {
     @PostConstruct
     public void init() {
         this.jbstProperties.getHardwareServerConfigs().printProperties(new PropertyId("hardwareServerConfigs"));
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/info").permitAll()
+                .anyRequest().authenticated()
+        ).csrf(AbstractHttpConfigurer::disable);
+        return http.build();
     }
 
     @Bean

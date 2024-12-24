@@ -11,10 +11,10 @@ import static jbst.foundation.domain.enums.Status.COMPLETED;
 
 @Slf4j
 @SpringBootApplication
-public class Application {
+public class Server {
 
     public static void main(String[] args) {
-        var springApplication = new SpringApplication(Application.class);
+        var springApplication = new SpringApplication(Server.class);
         var applicationContext = springApplication.run(args);
         var jbstProperties = applicationContext.getBean(JbstProperties.class);
         LOGGER.info(JbstConstants.Logs.getServerContainer(jbstProperties.getServerConfigs(), COMPLETED));
