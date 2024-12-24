@@ -3,7 +3,7 @@
 # Spring PostgreSQL
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:3004/jbst_dev
+    url: jdbc:postgresql://localhost:3004/jbst
     username: postgres
     password: postgres
   jpa:

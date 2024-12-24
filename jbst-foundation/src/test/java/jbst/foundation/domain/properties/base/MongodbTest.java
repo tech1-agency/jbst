@@ -15,9 +15,9 @@ class MongodbTest {
 
     private static Stream<Arguments> noAuthenticationTest() {
         return Stream.of(
-                Arguments.of("127.0.0.1", 27017, "jbst_dev", null, null),
-                Arguments.of("127.0.0.1", 27017, "jbst_dev", Username.random(), null),
-                Arguments.of("127.0.0.1", 27017, "jbst_dev", null, Password.random())
+                Arguments.of("127.0.0.1", 27017, "jbst", null, null),
+                Arguments.of("127.0.0.1", 27017, "jbst", Username.random(), null),
+                Arguments.of("127.0.0.1", 27017, "jbst", null, Password.random())
         );
     }
 
@@ -33,18 +33,18 @@ class MongodbTest {
         var actual = mongodb.connectionString();
 
         // Assert
-        assertThat(actual).isEqualTo("mongodb://127.0.0.1:27017/jbst_dev");
+        assertThat(actual).isEqualTo("mongodb://127.0.0.1:27017/jbst");
     }
 
     @Test
     void authenticationPresentTest() {
         // Arrange
-        var mongodb = new Mongodb("127.0.0.1", 27017, "jbst_dev", Username.of("admin"), Password.of("Password123!"));
+        var mongodb = new Mongodb("127.0.0.1", 27017, "jbst", Username.of("admin"), Password.of("Password123!"));
 
         // Act
         var actual = mongodb.connectionString();
 
         // Assert
-        assertThat(actual).isEqualTo("mongodb://admin:Password123!@127.0.0.1:27017/jbst_dev");
+        assertThat(actual).isEqualTo("mongodb://admin:Password123!@127.0.0.1:27017/jbst");
     }
 }

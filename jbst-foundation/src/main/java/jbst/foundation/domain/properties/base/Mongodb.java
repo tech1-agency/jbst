@@ -29,7 +29,7 @@ public class Mongodb extends AbstractPropertyConfigs {
     private Password password;
 
     public static Mongodb hardcoded() {
-        return Mongodb.noSecurity("127.0.0.1", 27017, "jbst_dev");
+        return Mongodb.noSecurity("127.0.0.1", 27017, "jbst");
     }
 
     public static Mongodb random() {

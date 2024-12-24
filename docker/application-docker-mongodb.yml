@@ -85,4 +85,4 @@ jbst:
     mongodb:
       host: jbst-mongodb
       port: 27017
-      database: jbst_dev
+      database: jbst
